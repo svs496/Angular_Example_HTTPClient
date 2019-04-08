@@ -1,0 +1,85 @@
+<div class="card bg-light mb-3" style="margin-top:10px;">
+
+  <div class="card-header">
+    {{title}}
+  </div>
+
+  <div class="card-body">
+    <h4 class="card-title">{{subHeading}}</h4>
+
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.taskDescription}">
+        <label for="taskDescription" class="col-sm-2 col-form-label">Task:</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" formControlName="taskDescription" id="taskDescription"
+            (blur)="logValidationErrors()" placeholder="Task..">
+          <span class="help-block" *ngIf="formErrors.taskDescription">
+            {{formErrors.taskDescription}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.priority}">
+        <label for="priority" class="col-sm-2 col-form-label">Priority:</label>
+        <div class="col-md-4">
+          <input id="slider1" type="range" min="0" max="30" value="5" class="form-control" formControlName="priority" />
+          <!-- <input type="text" class="form-control" formControlName="priority" id="priority"
+              (blur)="logValidationErrors()" placeholder="Task.."> -->
+          <span class="help-block" *ngIf="formErrors.priority">
+            {{formErrors.priority}}
+          </span>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label for="parentTask" class="col-sm-2 col-form-label">Parent Task:</label>
+        <div class="col-md-4">
+          <select class="form-control" id="parentTask" formControlName="parentTask">
+            <option value="" selected>Please Select</option>
+            <option *ngFor="let pTask of parentTasks" [value]="pTask.taskid">{{pTask.taskDescription}}</option>
+          </select>
+
+          <!-- <span class="help-block" *ngIf="formErrors.priority">
+              {{formErrors.priority}}
+            </span> -->
+        </div>
+      </div>
+
+
+      <div formGroupName="dateGroup">
+        <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.startDate}">
+          <label for="startDate" class="col-sm-2 col-form-label">Start Date:</label>
+          <div class="col-md-4">
+            <input type="text" bsDatepicker class="form-control" formControlName="startDate" id="startDate" [bsConfig]="{ showWeekNumbers:false}"
+              (blur)="logValidationErrors()">
+            <span class="help-block" *ngIf="formErrors.startDate">
+              {{formErrors.startDate}}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.endDate || formErrors.dateGroup}">
+          <label for="endDate" class="col-sm-2 col-form-label">End Date:</label>
+          <div class="col-md-4">
+            <input type="text" bsDatepicker  [minDate]="minDate" [bsConfig]="{ showWeekNumbers:false}"
+            class="form-control" formControlName="endDate" id="endDate" 
+              (blur)="logValidationErrors()">
+            <span class="help-block" *ngIf="formErrors.endDate || formErrors.dateGroup">
+              {{formErrors.endDate ?  formErrors.endDate : formErrors.dateGroup}}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row text-center">
+        <div class="col-8">
+          <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">Add Task</button>
+          &nbsp;<button type="button" class="btn btn-info" (click)="cancel()">Cancel</button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<form id="filterTasks" autocomplete="off" #filterTaskForm="ngForm" novalidate>
+  <div class="form-group row">
+    <div class="col-form-label">
+      <label for="task" class=" ">Task:</label>
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" id="task" [(ngModel)]="filterTaskDescription" placeholder="Filter by Task"
+        name="taskDescription">
+    </div>
+    <div class="col-form-label">
+      <label for="inputParentTask" class=" ">Parent Task:</label>
+    </div>
+    <div class="col">
+      <select class="form-control" id="parentTask" name="parentTask" [(ngModel)]="filterParentTask">
+        <option value="" selected>Please Select</option>
+        <option *ngFor="let pTask of parentTasks" [value]="pTask.taskid">{{pTask.taskDescription}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-form-label">
+      <label for="inptPriorityFrom" class=" ">Priority Form:</label>
+    </div>
+    <div class="col">
+
+        <!-- <input id="slider1" type="range" min="0" max="30" value="1" class="form-control" name="priorityFrom"
+        [(ngModel)]="filterPriorityFrom" /> -->
+
+      <input type="number" class="form-control" id="inptPriorityFrom" name="priorityFrom"
+        [(ngModel)]="filterPriorityFrom">
+    </div>
+    <div class="col-form-label">
+      <label for="inptPriorityTo" class=" ">Priority To:</label>
+    </div>
+    <div class="col">
+      <input type="number" class="form-control" id="inptPriorityTo" name="priorityTo" [(ngModel)]="filterPriorityTo">
+
+      <!-- <input id="slider2" type="range" min="0" max="30" value="1" class="form-control" name="priorityTo"
+      [(ngModel)]="filterPriorityTo" /> -->
+    </div>
+    <div class="col-form-label">
+      <label for="startDate" class=" ">Start Date:</label>
+    </div>
+    <div class="col">
+      <input type="text" bsDatepicker class="form-control" id="startDate" name="startDate" #fStartDate
+        [bsConfig]="{ showWeekNumbers:false}" [(ngModel)]="filterStartDate">
+    </div>
+    <div class="col-form-label">
+      <label for="endDate" class=" ">End Date:</label>
+    </div>
+    <div class="col">
+      <input type="text" bsDatepicker class="form-control" id="endDate" name="endDate" [minDate]="minDate"
+        (click)="setMinDate(fStartDate)" [bsConfig]="{ showWeekNumbers:false}" [(ngModel)]="filterEndDate">
+    </div>
+  </div>
+
+</form>
