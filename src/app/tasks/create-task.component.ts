@@ -48,6 +48,11 @@ export class CreateTaskComponent implements OnInit {
   };
 
   formErrors = {
+    "taskName" : '',
+    "priority" : '',
+    "startDate" :'',
+    "endDate" :'',
+    "dateGroup" : ''
   };
 
   cancel() {

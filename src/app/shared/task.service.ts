@@ -4,6 +4,7 @@ import { Observable, Subject, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
+import { EnvironmentUrlService } from './environment-url.service';
 
 
 @Injectable({
@@ -15,15 +16,14 @@ export class TaskService {
 
   tempTaskId: number;
 
-  static readonly  API_URL = environment.apiUrlAddress;
-  
+
   static readonly httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json'
     })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,  private envUrl: EnvironmentUrlService) { }
 
 
   settempTaskId(val: number) {
@@ -35,7 +35,7 @@ export class TaskService {
   }
 
   getTasks(): Observable<ITask[]> {
-    return this.http.get<ITask[]>(TaskService.API_URL + 'api/task')
+    return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/task')
       .pipe(
         map(res => {
           return res as ITask[];
@@ -46,7 +46,7 @@ export class TaskService {
 
 
   getTaskById(id: number): Observable<ITask> {
-    return this.http.get<ITask>(TaskService.API_URL + 'api/task/' + id)
+    return this.http.get<ITask>(this.envUrl.urlAddress + 'api/task/' + id)
       .pipe(
         map(res => {
           return res as ITask;
@@ -57,20 +57,20 @@ export class TaskService {
 
   addTask(task: any): Observable<any> {
     console.log(JSON.stringify(task));
-    return this.http.post<any>(TaskService.API_URL + 'api/task/', JSON.stringify(task), TaskService.httpOptions).pipe(
+    return this.http.post<any>(this.envUrl.urlAddress + 'api/task/', JSON.stringify(task), TaskService.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
   editTask(id:number,task: ITask): Observable<any> {
-    return this.http.put(TaskService.API_URL + 'api/task/' + id, JSON.stringify(task), TaskService.httpOptions).pipe(
+    return this.http.put(this.envUrl.urlAddress + 'api/task/' + id, JSON.stringify(task), TaskService.httpOptions).pipe(
       tap(_ => console.log(`updated task id=${id}`)),
       catchError(this.handleError)
     );
   }
 
   deleteTask(id: number) : Observable<any> {
-    return this.http.delete<any>(TaskService.API_URL + 'api/task/' + id, TaskService.httpOptions).pipe(
+    return this.http.delete<any>(this.envUrl.urlAddress + 'api/task/' + id, TaskService.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
@@ -80,7 +80,7 @@ export class TaskService {
   }
 
   getParentTasks(): Observable<ITask[]> {
-    return this.http.get<ITask[]>(TaskService.API_URL + 'api/parenttask')
+    return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/parenttask')
       .pipe(
         map(res => {
           return res as ITask[];

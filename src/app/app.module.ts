@@ -17,6 +17,7 @@ import { EndTaskComponent } from './tasks/end-task.component';
 import { SearchTaskComponent } from './tasks/search-task.component';
 import { Toastr, TOASTR_TOKEN } from './common/toastr.service';
 import { JQ_TOKEN } from './common/jQuery.service';
+import { EnvironmentUrlService } from './shared/environment-url.service';
 
 let toastr: Toastr = window['toastr'];
 let jQuery = window['$'];
@@ -45,6 +46,7 @@ let jQuery = window['$'];
     TaskService,
     { provide: TOASTR_TOKEN, useValue: toastr },
     { provide: JQ_TOKEN, useValue: jQuery },
+    EnvironmentUrlService ,
     BsModalService
   ],
   bootstrap: [AppComponent],

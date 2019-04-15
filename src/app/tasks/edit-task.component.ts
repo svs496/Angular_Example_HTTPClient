@@ -51,6 +51,11 @@ export class EditTaskComponent implements OnInit {
   };
 
   formErrors = {
+    "taskName" : '',
+    "priority" : '',
+    "startDate" :'',
+    "endDate" :'',
+    "dateGroup" : ''
   };
 
   ngOnInit() {
