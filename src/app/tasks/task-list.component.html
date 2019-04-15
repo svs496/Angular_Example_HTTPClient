@@ -30,7 +30,8 @@
       </div>
       <div class="card-body">
         <div *ngFor="let task of filteredTasks">
-          <task-thumbnail [task]="task" (modalActionCompleted) = "modalActionCompleted($event)" ></task-thumbnail>
+          <task-thumbnail [task]="task" 
+          (modalActionCompleted) = "modalActionCompleted($event)" ></task-thumbnail>
         </div>
       </div>
     </div>

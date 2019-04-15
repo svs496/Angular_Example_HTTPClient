@@ -1,8 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ITask } from '../model/task.model';
 import { TaskService } from '../shared/task.service';
 import { BsModalRef } from 'ngx-bootstrap';
+import { Toastr, TOASTR_TOKEN } from '../common/toastr.service';
 
 @Component({
   selector: 'app-edit-task',
@@ -17,23 +18,26 @@ export class EditTaskComponent implements OnInit {
 
   taskForm: FormGroup
   task: ITask
-  parentTasks: []
+  parentTasks: ITask[]
   title: string;
   subHeading: string;
-  editTaskId : number = -999;
+  editTaskId: number = -999;
 
-  minDate :Date
-  stDt : any
+  minDate: Date
+  stDt: Date
+
+
 
   constructor(private fb: FormBuilder,
     private taskService: TaskService,
+    @Inject(TOASTR_TOKEN) private toastr: Toastr,
     private bsModalRef: BsModalRef) { }
 
   validationMessages = {
-    'taskDescription': {
+    'taskName': {
       'required': 'Task is required',
-      'minlength': 'Task should be more than 5 chars',
-      'maxlength': 'Task should be less than 50 chars'
+      'minlength': 'Task should be more than 10 chars',
+      'maxlength': 'Task should be less than 100 chars'
     },
     'priority': {
       'required': 'Priority is required'
@@ -51,10 +55,9 @@ export class EditTaskComponent implements OnInit {
 
   ngOnInit() {
 
-    this.populateParentTaskDropdown();
 
     this.taskForm = this.fb.group({
-      taskDescription: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
+      taskName: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
       parentTask: '',
       priority: '1',
       startDate: ['', Validators.required],
@@ -65,24 +68,41 @@ export class EditTaskComponent implements OnInit {
       this.logValidationErrors(this.taskForm);
     });
 
+
     this.editTaskId = +this.taskService.gettempTaskId();
     this.title = "Edit Task"
     this.subHeading = "Update task details :"
-    this.getTaskbyId(this.editTaskId);
-
+    this.getEditTaskDetailsById(this.editTaskId);
   }
 
-  getTaskbyId(taskId: number): any {
-    var task: ITask = this.taskService.getTaskById(taskId);
-    
-    this.taskForm.patchValue({
-      taskId: task.taskId,
-      taskDescription: task.taskDescription,
-      parentTask: task.parentId,
-      priority: task.priority,
-      startDate: task.startDate,
-      endDate: task.endDate
-    });
+
+
+  getEditTaskDetailsById(taskId: number): any {
+
+
+    this.taskService.getParentTasks()
+    .subscribe(response => {
+      this.parentTasks = [];
+      this.parentTasks = response;
+
+      this.taskService.getTaskById(taskId)
+      .subscribe(response => {
+        this.taskForm.patchValue({
+          taskId: response.taskId,
+          taskName: response.taskName,
+          parentTask: response.parentTaskId == 0 ? '' : response.parentTaskId,
+          priority: response.priority,
+          startDate: response.startDate,
+          endDate: response.endDate
+        });
+
+        //task cannot be it's own parent
+        var index = this.parentTasks.findIndex (x => x.taskId === response.taskId);
+        this.parentTasks.splice(index, 1);
+
+      }, (err) => { console.log('error Message from component' + err); });
+
+    }, (err) => { console.log('error Message from component' + err); });
 
   }
 
@@ -93,19 +113,16 @@ export class EditTaskComponent implements OnInit {
       const abstractControl = group.get(key);
       this.formErrors[key] = '';
 
-      if (key === 'startDate')
-      {
-          if(abstractControl.value !== '')
-          {
-            this.stDt = new Date (abstractControl.value).toLocaleDateString();
-          }
+      if (key === 'startDate') {
+        if (abstractControl.value !== '') {
+          this.stDt = new Date(new Date(abstractControl.value).toLocaleDateString());
+        }
       }
 
-      if (key === 'endDate')
-      {
-        if(typeof this.stDt != 'undefined')
-        {
-          this.minDate = new Date(this.stDt);
+      if (key === 'endDate') {
+        if (typeof this.stDt != 'undefined') {
+          var temp = this.stDt;
+          this.minDate = temp;
         }
       }
 
@@ -120,42 +137,51 @@ export class EditTaskComponent implements OnInit {
       }
 
       if (abstractControl instanceof FormGroup) {
-       
+
         this.logValidationErrors(abstractControl);
       }
     });
   }
 
-  private populateParentTaskDropdown() {
-    this.taskService.getParentTasks()
-      .subscribe(response => {
-        this.parentTasks = response;
-      }, (err) => { console.log('error Message from component' + err); });
-  }
+
 
   cancel() {
     this.bsModalRef.hide();
   }
   onSubmit(): void {
-    this.mapDataToModel();
-    this.task.taskId = this.editTaskId;
-    this.taskService.editTask(this.task);
-    this.event.emit('modalActionCompleted');
-    this.bsModalRef.hide();
-    
 
+    if (this.taskForm.valid) {
+      this.mapDataToModel()
+      this.taskService.editTask(this.editTaskId, this.task)
+        .subscribe(res => {
+          this.event.emit('modalActionCompleted');
+          this.bsModalRef.hide();
+          this.toastr.success('Task is successfully updated!');
+        },
+          (error => {
+            this.toastr.error("Some thing went wrong. Contact Administrator.")
+            console.error(error);
+          })
+        )
+    }
+    
   }
+
   mapDataToModel() {
     this.task = {
       taskId: null,
-      parentId: this.taskForm.value.parentTask === '' ? null : +this.taskForm.value.parentTask,
-      taskDescription: this.taskForm.value.taskDescription,
+      parentTaskId: this.taskForm.value.parentTask === '' ? 0 : +this.taskForm.value.parentTask,
+      taskName: this.taskForm.value.taskName,
       priority: this.taskForm.value.priority,
       startDate: this.taskForm.value.startDate,
       endDate: this.taskForm.value.endDate,
-      isComplete: false
+      status: 1,
+      parentTaskName: ''
     };
+
+    this.task.taskId = this.editTaskId;
   }
+
   onClose() {
     this.bsModalRef.hide();
   }

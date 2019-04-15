@@ -12,9 +12,9 @@ import { TaskService } from '../shared/task.service';
 export class SearchTaskComponent implements OnInit, OnChanges, DoCheck {
 
 
- // @ViewChild('filterTaskForm') filterTaskForm: NgForm;
+  // @ViewChild('filterTaskForm') filterTaskForm: NgForm;
 
-  private _taskDescription: string
+  private _taskName: string
   private _parentTask: number
   private _startDate: Date
   private _endDate: Date
@@ -31,46 +31,54 @@ export class SearchTaskComponent implements OnInit, OnChanges, DoCheck {
 
   addMode: boolean;
   filteredTasks: ITask[];
-  parentTasks: [];
+  parentTasks: ITask[];
   /// Active filter rules
   filters = {}
 
   
-  
+
+
   constructor(private taskService: TaskService) { }
 
 
   ngDoCheck(): void {
-    this.filteredTasks = this.inputTasks;
-    this.applyFilters();
+    // this.filteredTasks = [];
+    // this.filteredTasks = this.inputTasks;
+    // this.applyFilters();
   }
 
 
   ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
-
+    this.filteredTasks = [];
     this.filteredTasks = this.inputTasks;
     this.applyFilters();
   }
 
   ngOnInit() {
     this.populateParentTaskDropdown();
-
+    this.filterParentTask = -1;
+   
   }
 
   private populateParentTaskDropdown() {
+    this.getParentTasks();
+  }
+
+  getParentTasks() {
     this.taskService.getParentTasks()
       .subscribe(response => {
+        this.parentTasks = [];
         this.parentTasks = response;
       }, (err) => { console.log('error Message from component' + err); });
   }
 
 
-  get filterTaskDescription(): string {
-    return this._taskDescription;
+  get filtertaskName(): string {
+    return this._taskName;
   }
-  set filterTaskDescription(value: string) {
-    this._taskDescription = value;
-    this.filters["taskDescription"] = value;
+  set filtertaskName(value: string) {
+    this._taskName = value;
+    this.filters["taskName"] = value;
     this.applyFilters();
 
   }
@@ -135,22 +143,22 @@ export class SearchTaskComponent implements OnInit, OnChanges, DoCheck {
   }
 
   setMinDate(fStartDate) {
-    console.log(fStartDate.value);
     this.minDate = new Date(fStartDate.value);
   }
 
   private filterTaskslogic() {
 
-
-    var taskDescriptionFilter: string,
+    var taskNameFilter: string,
       parentTaskFilter: number = -1,
-      priorityFromFilter : number =  0, 
-      priorityToFilter : number = 30, startDateFilter, endDateFilter;
+      priorityFromFilter: number = 0,
+      priorityToFilter: number = 30,
+      startDateFilter: Date,
+      endDateFilter: Date;
 
     for (const key of Object.keys(this.filters)) {
-      if (key === "taskDescription") {
-        //this.filteredTasks = this.inputTasks.filter(task => task.taskDescription.toLowerCase().indexOf(this.filters[key].toLowerCase()) !== -1);
-        taskDescriptionFilter = this.filters[key].toLowerCase();
+      if (key === "taskName") {
+        //this.filteredTasks = this.inputTasks.filter(task => task.taskName.toLowerCase().indexOf(this.filters[key].toLowerCase()) !== -1);
+        taskNameFilter = this.filters[key].toLowerCase();
       }
       if (key === "parentTask") {
         parentTaskFilter = +this.filters[key];
@@ -159,7 +167,7 @@ export class SearchTaskComponent implements OnInit, OnChanges, DoCheck {
         priorityFromFilter = +this.filters[key];
       }
       if (key === "priorityTo") {
-        priorityToFilter = +this.filters[key]  ;
+        priorityToFilter = +this.filters[key];
 
       }
       if (key === "startDate") {
@@ -170,21 +178,53 @@ export class SearchTaskComponent implements OnInit, OnChanges, DoCheck {
       }
     }
 
-    this.filteredTasks = this.inputTasks.filter(task => 
-      ( typeof taskDescriptionFilter != 'undefined' ?
-        task.taskDescription.toLowerCase().indexOf(taskDescriptionFilter) !== -1 : true)
-      && (parentTaskFilter > 0 ?  task.parentId ==  parentTaskFilter :true)
+    //console.log(startDateFilter.getUTCDate());
+    if (typeof startDateFilter != 'undefined') {
+      startDateFilter = new Date(startDateFilter.setHours(0, 0, 0));
+    }
+
+  
+    if (typeof endDateFilter != 'undefined') {
+      endDateFilter = new Date(endDateFilter.setHours(0, 0, 0));
+    }
+
+ 
+
+    this.filteredTasks = [];
+
+    this.filteredTasks = this.inputTasks.filter(task =>
+      (typeof taskNameFilter != 'undefined' ?
+        task.taskName.toLowerCase().indexOf(taskNameFilter) !== -1 : true)
       && (
-        priorityFromFilter == 0 ||  priorityToFilter == 0 ? true :
-        task.priority >= priorityFromFilter &&  task.priority <= priorityToFilter
+        parentTaskFilter > 0 ? task.parentTaskId === parentTaskFilter : true
+      )
+      && (
+        priorityFromFilter == 0 || priorityToFilter == 0 ? true :
+          task.priority >= priorityFromFilter && task.priority <= priorityToFilter
+      )
+      && (typeof startDateFilter != 'undefined' && task.startDate != null
+        ? task.startDate == this.compareDate(task.startDate, startDateFilter) : true
         )
-      && ( typeof startDateFilter != 'undefined' && task.startDate != null
-      ? Date.parse(task.startDate.toDateString()) == Date.parse(startDateFilter.toDateString()) : true)
-      &&  (typeof endDateFilter != 'undefined'  && task.endDate != null ? 
-      Date.parse(task.endDate.toDateString()) ==  Date.parse(endDateFilter.toDateString()) : true)
-      );
+      && (typeof endDateFilter != 'undefined' && task.endDate != null ?
+        task.endDate == this.compareDate(task.endDate, endDateFilter) : true)
+    );
+  }
 
+  compareDate(tempDate: Date, dateFilter: Date): Date {
 
+    var dt = new Date (tempDate);
+
+    if (Date.parse(dt.toDateString()) == Date.parse(dateFilter.toDateString()))
+      return tempDate;
+
+      return new Date (dateFilter);
+  }
+
+  resetEndDate (){
+  
+    this.filterEndDate = null;
 
   }
+
+
 }

@@ -4,8 +4,7 @@ import { CreateTaskComponent } from './tasks/create-task.component';
 import { TaskListComponent } from './tasks/task-list.component';
 
 const routes: Routes = [
-  { path:'tasks/new',component:CreateTaskComponent },
-  { path:'tasks',component:TaskListComponent }
+  { path:'tasks/new',component:CreateTaskComponent }
 ];
 
 @NgModule({

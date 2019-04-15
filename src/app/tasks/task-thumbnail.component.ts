@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ITask } from '../model/task.model';
 
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -13,10 +13,10 @@ import { EndTaskComponent } from './end-task.component';
   styleUrls: ['./task-thumbnail.component.css']
 })
 export class TaskThumbnailComponent implements OnInit {
+ 
+ 
 
   @Input() task: ITask;
- 
-  parentTaskName :string
 
   @Output() modalActionCompleted: EventEmitter<any> = new EventEmitter;
   
@@ -31,11 +31,9 @@ export class TaskThumbnailComponent implements OnInit {
   constructor(private bsModalService: BsModalService, private taskService :TaskService) { }
 
   ngOnInit() {
-      
-    this.parentTaskName = this.taskService.getParentTaskName(this.task.parentId);
-
   }
 
+  
   editTask(taskId: number) {
     
     this.taskService.settempTaskId (taskId);

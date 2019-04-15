@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ITask } from '../model/task.model';
 import { TaskService } from '../shared/task.service';
+import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 
 @Component({
   selector: 'app-create-task',
@@ -14,22 +15,23 @@ export class CreateTaskComponent implements OnInit {
 
   taskForm: FormGroup
   task: ITask;
-  parentTasks: [];
+  parentTasks: ITask[];
   title: string;
   subHeading: string;
 
-  minDate :Date
-  stDt : any
+  minDate: Date
+  stDt: any
 
   constructor(
     private fb: FormBuilder,
+    @Inject(TOASTR_TOKEN) private toastr: Toastr,
     private taskService: TaskService) { }
 
   validationMessages = {
-    'taskDescription': {
+    'taskName': {
       'required': 'Task is required',
-      'minlength': 'Task should be more than 5 chars',
-      'maxlength': 'Task should be less than 50 chars'
+      'minlength': 'Task should be more than 10 chars',
+      'maxlength': 'Task should be less than 100 chars'
     },
     'priority': {
       'required': 'Priority is required'
@@ -57,7 +59,7 @@ export class CreateTaskComponent implements OnInit {
     this.populateParentTaskDropdown();
 
     this.taskForm = this.fb.group({
-      taskDescription: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
+      taskName: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
       parentTask: '',
       priority: '1',
       dateGroup: this.fb.group(
@@ -79,11 +81,17 @@ export class CreateTaskComponent implements OnInit {
 
 
   private populateParentTaskDropdown() {
+    this.getParentTasks();
+  }
+
+  getParentTasks() {
     this.taskService.getParentTasks()
       .subscribe(response => {
+        this.parentTasks = [];
         this.parentTasks = response;
       }, (err) => { console.log('error Message from component' + err); });
   }
+
 
   //loop through form controls and formgroup. both derrive from abstract control
   logValidationErrors(group: FormGroup = this.taskForm) {
@@ -91,20 +99,16 @@ export class CreateTaskComponent implements OnInit {
       const abstractControl = group.get(key);
       this.formErrors[key] = '';
 
-      if (key === 'startDate')
-      {
-       
-          if(abstractControl.value !== '')
-          {
-            this.stDt = new Date (abstractControl.value).toLocaleDateString();
-         
-          }
+      if (key === 'startDate') {
+
+        if (abstractControl.value !== '') {
+          this.stDt = new Date(abstractControl.value).toLocaleDateString();
+
+        }
       }
 
-      if (key === 'endDate')
-      {
-        if(typeof this.stDt != 'undefined')
-        {
+      if (key === 'endDate') {
+        if (typeof this.stDt != 'undefined') {
           this.minDate = new Date(this.stDt);
         }
       }
@@ -126,22 +130,42 @@ export class CreateTaskComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.mapDataToModel();
-    this.taskService.addTask(this.task);
-    this.backFromAddTask.emit();
+    if (this.taskForm.valid) {
+
+      var tasktoAdd = {
+        parentTaskId: this.taskForm.value.parentTask === '' ? 0 : +this.taskForm.value.parentTask,
+        taskName: this.taskForm.value.taskName,
+        priority: this.taskForm.value.priority,
+        startDate: this.taskForm.value.dateGroup.startDate,
+        endDate: this.taskForm.value.dateGroup.endDate,
+        status: 1
+      };
+
+      this.taskService.addTask(tasktoAdd)
+        .subscribe(res => {
+          this.backFromAddTask.emit();
+          this.toastr.success('A new Task is added!');
+        },
+          (error => {
+            this.toastr.error("Some thing went wrong. Contact Administrator.")
+            console.error(error);
+          })
+        )
+    }
   }
 
-  mapDataToModel() {
-    this.task = {
-      taskId: null,
-      parentId: this.taskForm.value.parentTask === '' ? null : +this.taskForm.value.parentTask,
-      taskDescription: this.taskForm.value.taskDescription,
-      priority: this.taskForm.value.priority,
-      startDate: this.taskForm.value.dateGroup.startDate,
-      endDate: this.taskForm.value.dateGroup.endDate,
-      isComplete: false
-    };
-  }
+  // mapDataToModel() {
+  //   this.task = {
+  //     taskId: null,
+  //     parentTaskId: this.taskForm.value.parentTask === '' ? 0 : +this.taskForm.value.parentTask,
+  //     taskName: this.taskForm.value.taskName,
+  //     priority: this.taskForm.value.priority,
+  //     startDate: this.taskForm.value.dateGroup.startDate,
+  //     endDate: this.taskForm.value.dateGroup.endDate,
+  //     status: 1,
+  //     parentTaskName: ''
+  //   };
+  // }
 
 } //end of class
 
@@ -152,17 +176,16 @@ function compareDate(group: AbstractControl): { [key: string]: any } | null {
   const startDateControl = group.get('startDate');
   const endDateControl = group.get('endDate');
 
-  var startDate = new Date(startDateControl.value) ;
+  var startDate = new Date(startDateControl.value);
   var endDate = new Date(endDateControl.value);
- 
-  if (startDate.getTime() > endDate.getTime())
-  {
+
+  if (startDate.getTime() > endDate.getTime()) {
     return { 'dateMismatch': true }
   }
   //both dates should be selected
   if (startDate && endDate) {
     return null
   }
-  
-  
+
+
 }

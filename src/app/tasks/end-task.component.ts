@@ -1,6 +1,8 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
 import { TaskService } from '../shared/task.service';
 import { BsModalRef } from 'ngx-bootstrap';
+import { ITask } from '../model/task.model';
+import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 
 @Component({
   selector: 'app-end-task',
@@ -9,22 +11,38 @@ import { BsModalRef } from 'ngx-bootstrap';
 })
 export class EndTaskComponent implements OnInit {
 
-  taskId : number
-  taskDescription : string
+  task:ITask
+  taskName: string
   event: EventEmitter<any> = new EventEmitter();
 
-  constructor(private taskService: TaskService, private bsModalRef: BsModalRef) { }
+  constructor(private taskService: TaskService,  @Inject(TOASTR_TOKEN) private toastr: Toastr, private bsModalRef: BsModalRef) { }
+
+  private getTaskName() {
+    this.taskService.getTaskById(this.taskService.gettempTaskId())
+      .subscribe(response => {
+        this.task = null;
+        this.task = response;
+        this.taskName = response.taskName;
+      }, (err) => { console.log('error Message from component' + err); });
+  }
 
   ngOnInit() {
-    this.taskId = this.taskService.gettempTaskId();
-    var task = this.taskService.getTaskById(this.taskId);
-    this.taskDescription = task.taskDescription;
+    this.getTaskName();
   }
 
   endTask() {
-    this.taskService.endTask(this.taskId);
-    this.event.emit('modalActionCompleted');
-    this.bsModalRef.hide();
+    this.task.status = 2;
+
+    this.taskService.editTask(this.task.taskId, this.task)
+    .subscribe(res => {
+      this.event.emit('modalActionCompleted');
+      this.bsModalRef.hide();
+      this.toastr.info('This task is now Ended!');
+    },
+      (error => {
+        console.error(error);
+      })
+    )
   }
 
   onClose() {

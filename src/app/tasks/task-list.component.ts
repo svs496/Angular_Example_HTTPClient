@@ -19,17 +19,20 @@ export class TaskListComponent implements OnInit {
 
   addMode: boolean;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.addMode = false;
-    this.getallTasks();
+    this.allTasks = [];
+    this.getallTasks() 
   }
 
   private getallTasks() {
     this.taskService.getTasks()
       .subscribe(response => {
+        this.allTasks = [];
         this.allTasks = response;
       }, (err) => { console.log('error Message from component' + err); });
-  }
+  
+    }
 
   addTask() {
     this.addMode = true;
@@ -40,6 +43,7 @@ export class TaskListComponent implements OnInit {
   }
 
   backFromAddTask() {
+    this.getallTasks();
     this.addMode = false;
   }
 
@@ -47,7 +51,7 @@ export class TaskListComponent implements OnInit {
     this.filteredTasks = outputTasks;
   }
 
-  modalActionCompleted() {
+   modalActionCompleted() {
     this.taskService.getTasks()
       .subscribe(response => {
         const temp = response

@@ -8,13 +8,13 @@
     <h4 class="card-title">{{subHeading}}</h4>
 
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" autocomplete="off">
-      <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.taskDescription}">
-        <label for="taskDescription" class="col-sm-2 col-form-label">Task:</label>
+      <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.taskName}">
+        <label for="taskName" class="col-sm-2 col-form-label">Task:</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" formControlName="taskDescription" id="taskDescription"
+          <input type="text" class="form-control" formControlName="taskName" id="taskName"
             (blur)="logValidationErrors()" placeholder="Task..">
-          <span class="help-block" *ngIf="formErrors.taskDescription">
-            {{formErrors.taskDescription}}
+          <span class="help-block" *ngIf="formErrors.taskName">
+            {{formErrors.taskName}}
           </span>
         </div>
       </div>
@@ -36,8 +36,8 @@
         <label for="parentTask" class="col-sm-2 col-form-label">Parent Task:</label>
         <div class="col-md-4">
           <select class="form-control" id="parentTask" formControlName="parentTask">
-            <option value="" selected>Please Select</option>
-            <option *ngFor="let pTask of parentTasks" [value]="pTask.taskid">{{pTask.taskDescription}}</option>
+            <option  value=""  selected>Select parent task </option>
+            <option *ngFor="let pTask of parentTasks" [value]="pTask.taskId">{{pTask.taskName}}</option>
           </select>
 
           <!-- <span class="help-block" *ngIf="formErrors.priority">

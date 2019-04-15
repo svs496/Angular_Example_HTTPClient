@@ -15,8 +15,11 @@ import { DeleteTaskComponent } from './tasks/delete-task.component';
 import { EditTaskComponent } from './tasks/edit-task.component';
 import { EndTaskComponent } from './tasks/end-task.component';
 import { SearchTaskComponent } from './tasks/search-task.component';
+import { Toastr, TOASTR_TOKEN } from './common/toastr.service';
+import { JQ_TOKEN } from './common/jQuery.service';
 
-
+let toastr: Toastr = window['toastr'];
+let jQuery = window['$'];
 
 @NgModule({
   declarations: [
@@ -33,13 +36,18 @@ import { SearchTaskComponent } from './tasks/search-task.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     HttpClientModule,
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot()
   ],
-  providers: [TaskService, BsModalService],
+  providers: [
+    TaskService,
+    { provide: TOASTR_TOKEN, useValue: toastr },
+    { provide: JQ_TOKEN, useValue: jQuery },
+    BsModalService
+  ],
   bootstrap: [AppComponent],
-  entryComponents:[EditTaskComponent,DeleteTaskComponent, EndTaskComponent]
+  entryComponents: [EditTaskComponent, DeleteTaskComponent, EndTaskComponent]
 })
 export class AppModule { }

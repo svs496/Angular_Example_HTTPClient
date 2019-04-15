@@ -1,4 +1,4 @@
-<div [ngClass]="{'alert-success': task.isComplete}">
+<div [ngClass]="{'alert-success': task.status == 2}">
   <div class="row">
     <div class="col-sm-2 h5">Task</div>
     <div class="col-sm-2 h5">Parent</div>
@@ -7,15 +7,17 @@
     <div class="col ml-6 h5">End</div>
   </div>
   <div class="row">
-    <div class="col-sm-2">{{task.taskDescription | uppercase}}</div>
-    <div class="col-sm-2">{{parentTaskName | uppercase}}</div>
+    <div class="col-sm-2">{{task.taskName | uppercase}}</div>
+    <div class="col-sm-2" *ngIf="!task.parentTaskName;" style="color: red">No Parent Task</div>
+    <div class="col-sm-2" *ngIf="task.parentTaskName;">{{task.parentTaskName | uppercase}}</div>
+
     <div class="col-sm-auto">{{task.priority}}</div>
     <div class="col-sm-auto ml-5">{{task?.startDate | date:'shortDate'}}</div>
     <div class="col ml-2">{{task?.endDate | date:'shortDate'}}</div>
-    <div class="col"><button type="button" class="btn btn-info btn-block" [disabled]="task.isComplete"
+    <div class="col"><button type="button" class="btn btn-info btn-block" [disabled]="task.status == 2"
         (click)="editTask(task.taskId)">Edit</button>
     </div>
-    <div class="col"><button type="button" class="btn btn-primary btn-block" [disabled]="task.isComplete"
+    <div class="col"><button type="button" class="btn btn-primary btn-block" [disabled]="task.status == 2"
         (click)="endTask(task.taskId)">End task</button></div>
     <div class="col"><button type="button" class="btn btn-danger btn-block"
         (click)="deleteTask(task.taskId) ">Delete</button></div>

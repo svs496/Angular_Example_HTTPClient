@@ -4,16 +4,16 @@
       <label for="task" class=" ">Task:</label>
     </div>
     <div class="col">
-      <input type="text" class="form-control" id="task" [(ngModel)]="filterTaskDescription" placeholder="Filter by Task"
-        name="taskDescription">
+      <input type="text" class="form-control" id="task" [(ngModel)]="filtertaskName" placeholder="Filter by Task"
+        name="taskName">
     </div>
     <div class="col-form-label">
       <label for="inputParentTask" class=" ">Parent Task:</label>
     </div>
     <div class="col">
-      <select class="form-control" id="parentTask" name="parentTask" [(ngModel)]="filterParentTask">
-        <option value="" selected>Please Select</option>
-        <option *ngFor="let pTask of parentTasks" [value]="pTask.taskid">{{pTask.taskDescription}}</option>
+      <select class="form-control" id="parentTask" name="filterParentTask" [(ngModel)]="filterParentTask">
+        <option value="-1" selected>Select parent task</option>
+        <option *ngFor="let pTask of parentTasks" [value]="pTask.taskId">{{pTask.taskName}}</option>
       </select>
     </div>
   </div>
@@ -49,7 +49,7 @@
       <label for="endDate" class=" ">End Date:</label>
     </div>
     <div class="col">
-      <input type="text" bsDatepicker class="form-control" id="endDate" name="endDate" [minDate]="minDate"
+      <input type="text" bsDatepicker class="form-control" id="endDate" name="endDate" [minDate]="minDate" (blur) = "resetEndDate()"
         (click)="setMinDate(fStartDate)" [bsConfig]="{ showWeekNumbers:false}" [(ngModel)]="filterEndDate">
     </div>
   </div>
