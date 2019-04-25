@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ITask } from '../model/task.model';
-import { Observable, Subject, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { EnvironmentUrlService } from './environment-url.service';
@@ -92,15 +91,8 @@ export class TaskService {
 
 
   private handleError(error) {
-    // let errorMessage = '';
-    // if (error.error instanceof ErrorEvent) {
-    //   // Get client-side error
-    //   errorMessage = error.error.message;
-    // } else {
-    //   // Get server-side error
-    //   errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    // }
-    //window.alert(errorMessage);
+   
+    console.log(error);
     return throwError(error);
   }
 
