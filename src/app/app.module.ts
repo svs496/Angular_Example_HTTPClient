@@ -18,7 +18,7 @@ import { SearchTaskComponent } from './tasks/search-task.component';
 import { Toastr, TOASTR_TOKEN } from './common/toastr.service';
 import { JQ_TOKEN } from './common/jQuery.service';
 import { EnvironmentUrlService } from './shared/environment-url.service';
-import { NavBarComponent } from './nav/nav-bar/nav-bar.component';
+import { NavBarComponent } from './nav/nav-bar.component';
 import { AddUserComponent } from './user/add-user.component';
 import { AddProjectComponent } from './project/add-project.component';
 import { UserService } from './shared/user.service';
