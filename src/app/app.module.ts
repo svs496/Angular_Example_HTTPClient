@@ -18,6 +18,11 @@ import { SearchTaskComponent } from './tasks/search-task.component';
 import { Toastr, TOASTR_TOKEN } from './common/toastr.service';
 import { JQ_TOKEN } from './common/jQuery.service';
 import { EnvironmentUrlService } from './shared/environment-url.service';
+import { NavBarComponent } from './nav/nav-bar/nav-bar.component';
+import { AddUserComponent } from './user/add-user.component';
+import { AddProjectComponent } from './project/add-project.component';
+import { UserService } from './shared/user.service';
+import { ProjectService } from './shared/project.service';
 
 let toastr: Toastr = window['toastr'];
 let jQuery = window['$'];
@@ -31,7 +36,10 @@ let jQuery = window['$'];
     DeleteTaskComponent,
     EditTaskComponent,
     EndTaskComponent,
-    SearchTaskComponent
+    SearchTaskComponent,
+    NavBarComponent,
+    AddUserComponent,
+    AddProjectComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +55,9 @@ let jQuery = window['$'];
     { provide: TOASTR_TOKEN, useValue: toastr },
     { provide: JQ_TOKEN, useValue: jQuery },
     EnvironmentUrlService ,
-    BsModalService
+    BsModalService,
+    UserService,
+    ProjectService
   ],
   bootstrap: [AppComponent],
   entryComponents: [EditTaskComponent, DeleteTaskComponent, EndTaskComponent]
