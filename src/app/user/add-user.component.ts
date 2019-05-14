@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 import { UserService } from '../shared/user.service';
 import { IUser } from '../model/user.model';
-import { Router } from '@angular/router';
-import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-add-user',
@@ -18,7 +16,6 @@ export class AddUserComponent implements OnInit {
   sortBy: string = 'firstName';
   allUsers: IUser[];
   addMode: boolean
-  cardHeader: string
   editUserId: number;
 
   constructor(
@@ -57,11 +54,6 @@ export class AddUserComponent implements OnInit {
 
     this.getAllUsers();
 
-    if (this.addMode) {
-      this.cardHeader = 'Add New User'
-    }
-    else
-      this.cardHeader = 'Edit User'
 
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
@@ -73,10 +65,6 @@ export class AddUserComponent implements OnInit {
       this.logValidationErrors(this.userForm);
     });
 
-    if (!this.addMode) {
-      console.log("hi");
-
-    }
 
   }//ngOnit
 
@@ -128,6 +116,7 @@ export class AddUserComponent implements OnInit {
       'lastName': '',
       'employeeID': ''
     });
+    this.addMode = true;
   }
 
   changeToEditMode($event: number) {

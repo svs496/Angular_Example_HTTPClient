@@ -1,7 +1,8 @@
 <div class="card bg-light mb-3 w-50" style="margin-top:10px;">
 
   <div class="card-header">
-    {{cardHeader}}
+    <span *ngIf="addMode">Add User</span>
+    <span *ngIf="!addMode">Edit User</span>
   </div>
 
   <div class="card-body">

@@ -38,3 +38,18 @@ button {
   background-color: #f89406;
 }
 
+.buttonRound {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  /* margin: 4px 2px; */
+  border-radius: 50%;
+}
