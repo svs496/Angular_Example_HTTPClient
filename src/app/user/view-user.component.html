@@ -1,0 +1,25 @@
+<div class="table-responsive-sm" style="margin-top:10px; width:50%">
+    <table class="table table-sm" *ngIf="visibleUsers && visibleUsers.length">
+      <thead class="thead-dark">
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Id</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of visibleUsers">
+          <td>{{user.firstName | uppercase}}</td>
+          <td>{{user.lastName | uppercase}}</td>
+          <td>{{user.employeeID | uppercase}}</td>
+          <td>
+            <button type="button" class="btn btn-info btn-block btn-sm" (click)="editUser(user.userId)">Edit</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-block btn-sm" (click)="deleteUser(user.userId) ">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+  
+    </table>
+  </div>

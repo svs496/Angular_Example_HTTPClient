@@ -1,17 +1,15 @@
-<div class="card bg-light mb-3" style="margin-top:10px;">
+<div class="card bg-light mb-3 w-50" style="margin-top:10px;">
 
   <div class="card-header">
-    Add users
+    {{cardHeader}}
   </div>
 
   <div class="card-body">
-    <h4 class="card-title">Enter User Details :</h4>
-
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()" autocomplete="off">
       <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.firstName}">
-        <label for="firstName" class="col-sm-2 col-form-label">First Name:</label>
-        <div class="col-md-6">
-          <input type="text" class="form-control" formControlName="firstName" id="firstName"
+        <label for="firstName" class="col-sm-2 col-form-label col-form-label-sm">First Name:</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control form-control-sm" formControlName="firstName" id="firstName"
             (blur)="logValidationErrors()" placeholder="First name..">
           <span class="help-block" *ngIf="formErrors.firstName">
             {{formErrors.firstName}}
@@ -20,9 +18,9 @@
       </div>
 
       <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.lastName}">
-        <label for="lastName" class="col-sm-2 col-form-label">Last Name:</label>
-        <div class="col-md-6">
-          <input type="text" class="form-control" formControlName="lastName" id="lastName"
+        <label for="lastName" class="col-sm-2 col-form-label col-form-label-sm">Last Name:</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control form-control-sm" formControlName="lastName" id="lastName"
             (blur)="logValidationErrors()" placeholder="Last name..">
           <span class="help-block" *ngIf="formErrors.lastName">
             {{formErrors.lastName}}
@@ -30,20 +28,25 @@
         </div>
       </div>
 
-      <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.employeeId}">
-        <label for="employeeId" class="col-sm-2 col-form-label">Employee ID:</label>
-        <div class="col-md-6">
-          <input type="text" class="form-control" formControlName="employeeId" id="employeeId"
+      <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.employeeID}">
+        <label for="employeeID" class="col-sm-2 col-form-label col-form-label-sm">Employee Id:</label>
+        <div class="col-md-4">
+          <input type="text" class="form-control form-control-sm" formControlName="employeeID" id="employeeID"
             (blur)="logValidationErrors()" placeholder="Employee Id..">
-          <span class="help-block" *ngIf="formErrors.employeeId">
-            {{formErrors.employeeId}}
+          <span class="help-block" *ngIf="formErrors.employeeID">
+            {{formErrors.employeeID}}
           </span>
         </div>
       </div>
       <div class="form-group row text-center">
-        <div class="col-8">
-          <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Add</button>
-          &nbsp;<button type="button" class="btn btn-info" (click)="cancel()">Cancel</button>
+        <div *ngIf="addMode" class="col-sm-1">
+            <button type="submit" class="btn btn-primary btn-sm" [disabled]="userForm.invalid">Add</button>
+        </div>
+        <div *ngIf="!addMode" class="col-sm-1">
+            <button type="button" class="btn btn-danger btn-sm" (click)="edit()">Edit</button>
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="btn btn-info btn-sm" (click)="cancel()">Cancel</button>
         </div>
 
       </div>
@@ -51,3 +54,21 @@
 
   </div>
 </div>
+
+<div class="row">
+  <div class="col-md-3">
+    <input type="text" class="form-control" placeholder="Search..">
+  </div>
+  <div>
+    <label for="lastName" class="col-form-label">Sort: </label>&nbsp;
+    <button class="btn btn-primary btn-sm" [class.active]="sortBy ==='firstName'" (click)="sortBy ='firstName'">First
+      Name</button>&nbsp;
+    <button class="btn btn-danger btn-sm" [class.active]="sortBy ==='lastName'" (click)="sortBy ='lastName'">Last
+      Name</button> &nbsp;
+    <button class="btn btn-dark btn-sm" [class.active]="sortBy ==='employeeID'" (click)="sortBy ='employeeID'">Employee
+      Id</button>
+  </div>
+</div>
+
+<app-view-user [users]="allUsers" [sortBy]="sortBy" (editMessageEvent)="changeToEditMode($event)"
+(deleteMessageEvent)="deleteComplete($event)"></app-view-user>

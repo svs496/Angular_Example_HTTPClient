@@ -13,11 +13,11 @@ export class TaskListComponent implements OnInit {
 
   allTasks: ITask[];
   filteredTasks: ITask[];
+  addMode : boolean
 
 
   constructor(private taskService: TaskService) { }
 
-  addMode: boolean;
 
   async ngOnInit() {
     this.addMode = false;

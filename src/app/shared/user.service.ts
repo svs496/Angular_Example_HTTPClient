@@ -34,6 +34,16 @@ export class UserService {
       );
   }
 
+  getUserById(id: number): Observable<IUser> {
+    return this.http.get<IUser>(this.envUrl.urlAddress + 'api/user/' + id)
+      .pipe(
+        map(res => {
+          return res as IUser;
+        }),
+        catchError((e: Response) => this.handleError(e))
+      );
+  }
+
   addUser(user: any): Observable<any> {
     console.log(JSON.stringify(user));
     return this.http.post<any>(this.envUrl.urlAddress + 'api/user/', JSON.stringify(user), UserService.httpOptions).pipe(

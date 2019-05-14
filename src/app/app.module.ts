@@ -23,6 +23,7 @@ import { AddUserComponent } from './user/add-user.component';
 import { AddProjectComponent } from './project/add-project.component';
 import { UserService } from './shared/user.service';
 import { ProjectService } from './shared/project.service';
+import { ViewUserComponent } from './user/view-user.component';
 
 let toastr: Toastr = window['toastr'];
 let jQuery = window['$'];
@@ -39,7 +40,8 @@ let jQuery = window['$'];
     SearchTaskComponent,
     NavBarComponent,
     AddUserComponent,
-    AddProjectComponent
+    AddProjectComponent,
+    ViewUserComponent
   ],
   imports: [
     BrowserModule,
