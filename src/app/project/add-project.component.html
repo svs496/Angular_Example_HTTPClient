@@ -71,17 +71,14 @@
                 </div>
             </div>
 
-            <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.manager}">
-                <label for="manager" class="col-sm-2 col-form-label col-form-label-sm">Manager:</label>
+            <div class="form-group row">
+                <label for="managerName" class="col-sm-2 col-form-label col-form-label-sm">Manager:</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="manager" id="manager"
-                        (blur)="logValidationErrors()" placeholder="Manager..">
-                    <span class="help-block" *ngIf="formErrors.manager">
-                        {{formErrors.manager}}
-                    </span>
+                    <input type="text" class="form-control form-control-sm" formControlName="managerName" id="managerName"
+                        placeholder="Search Manager..">
                 </div>
                 <div>
-                    <button type="button" class="buttonRound" (click)="searchProject()">Search</button>
+                    <button type="button" class="buttonRound" (click)="searchProjectManager()">Search</button>
                 </div>
             </div>
 

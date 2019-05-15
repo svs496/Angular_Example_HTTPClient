@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { IProject } from '../model/project.model';
 import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 import { ProjectService } from '../shared/project.service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { ViewUserModalComponent } from '../user/view-user-modal.component';
 
 @Component({
   selector: 'app-add-project',
@@ -17,9 +19,17 @@ export class AddProjectComponent implements OnInit {
   allProjects: IProject[] = [];
   addMode: boolean
   editProjectId: number;
+  managerId: number;
+
+  bsModalRef: BsModalRef
+  config = {
+    backdrop: true,
+    ignoreBackdropClick: true,
+    class: 'modal-lg'
+  };
 
   constructor(
-    private fb: FormBuilder,
+    private fb: FormBuilder, private bsModalService: BsModalService,
     @Inject(TOASTR_TOKEN) private toastr: Toastr, private projectService: ProjectService) {
     this.addMode = true;
   }
@@ -40,7 +50,7 @@ export class AddProjectComponent implements OnInit {
       'required': 'End Date is required'
     },
     'dateGroup': {
-      'dateMismatch': 'Task End Date cannot be before Task Start Date'
+      'dateMismatch': 'Project end date cannot be before start date'
     }
   };
 
@@ -56,21 +66,26 @@ export class AddProjectComponent implements OnInit {
 
     this.getAllProjects();
 
+    this.createProjectForm();
+
+  } //end ngOnInit
+
+  private createProjectForm() {
     this.projectForm = this.fb.group({
       projectName: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
       priority: '0',
-      dateGroup: this.fb.group(
-        {
-          startDate: ['', Validators.required],
-          endDate: ['', Validators.required]
-        }, { validator: compareDate }),
+      managerName: '',
+      dateGroup: this.fb.group({
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required]
+      }, { validator: compareDate }),
     });
+    this.projectForm.controls['managerName'].disable();
 
     this.projectForm.valueChanges.subscribe((data) => {
       this.logValidationErrors(this.projectForm);
     });
-
-  } //end ngOnInit
+  }
 
   getAllProjects() {
     this.projectService.getUsers()
@@ -80,15 +95,40 @@ export class AddProjectComponent implements OnInit {
       }, (err) => { console.log('error Message from component' + err); });
   }
 
+
+  searchProjectManager() {
+    this.bsModalRef = this.bsModalService.show(ViewUserModalComponent, this.config);
+    this.bsModalRef.content.event.subscribe((result: any) => {
+
+      this.projectForm.controls['managerName'].setValue(result.managerName);
+      this.managerId = result.managerId;
+    });
+  }
+
   private restFormAndCallService() {
     this.projectForm.reset({
       "projectName": '',
       "priority": '',
       "startDate": '',
-      "endDate": ''
+      "endDate": '',
+      "managerName": ''
     });
     this.getAllProjects();
     this.addMode = true;
+  }
+
+  cancel() {
+    this.addMode = true;
+    this.projectForm.reset({
+      "projectName": '',
+      "priority": '0',
+      "startDate": new Date().toISOString().substring(0, 10),
+      "endDate": new Date().toISOString().substring(0, 10),
+      "managerName": ''
+    });
+
+   
+    this.createProjectForm();
   }
 
   onSubmit(): void {
@@ -97,7 +137,8 @@ export class AddProjectComponent implements OnInit {
         projectName: this.projectForm.value.projectName,
         priority: this.projectForm.value.priority,
         startDate: this.projectForm.value.dateGroup.startDate,
-        endDate: this.projectForm.value.dateGroup.endDate
+        endDate: this.projectForm.value.dateGroup.endDate,
+        userId: this.managerId
       };
       this.projectService.addProject(prjct)
         .subscribe(res => {
@@ -118,6 +159,11 @@ export class AddProjectComponent implements OnInit {
     Object.keys(group.controls).forEach((key: string) => {
       const abstractControl = group.get(key);
       this.formErrors[key] = '';
+
+      if (key === 'startDate') {
+
+        console.log(abstractControl);
+      }
 
       if (abstractControl && !abstractControl.valid &&
         (abstractControl.touched || abstractControl.dirty || abstractControl.value !== '')) {

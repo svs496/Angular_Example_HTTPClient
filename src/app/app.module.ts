@@ -25,6 +25,7 @@ import { UserService } from './shared/user.service';
 import { ProjectService } from './shared/project.service';
 import { ViewUserComponent } from './user/view-user.component';
 import { ViewProjectComponent } from './project/view-project.component';
+import { ViewUserModalComponent } from './user/view-user-modal.component';
 
 let toastr: Toastr = window['toastr'];
 let jQuery = window['$'];
@@ -43,7 +44,8 @@ let jQuery = window['$'];
     AddUserComponent,
     AddProjectComponent,
     ViewUserComponent,
-    ViewProjectComponent
+    ViewProjectComponent,
+    ViewUserModalComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +66,6 @@ let jQuery = window['$'];
     ProjectService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [EditTaskComponent, DeleteTaskComponent, EndTaskComponent]
+  entryComponents: [EditTaskComponent, DeleteTaskComponent, EndTaskComponent,ViewUserModalComponent ]
 })
 export class AppModule { }

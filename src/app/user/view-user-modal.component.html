@@ -1,0 +1,54 @@
+
+
+<div class="modal-header">
+  <h4 class="modal-title" id="add-modal-label">Select User</h4>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()"><span
+      aria-hidden="true">&times;</span></button>
+
+</div>
+<div class="modal-body">
+  <form id="filterUsers" autocomplete="off" #filterSearchForm="ngForm" novalidate>
+    <div class="form-group row">
+      <div class="col-form-label">
+        <label for="filterUser" style="margin-bottom:5px;"
+         class="col-form-label col-form-label-sm">&nbsp;Search:</label>
+      </div>
+      <div class="col">
+        <input type="text" class="form-control" id="filterUser" [(ngModel)]="filterUser" 
+         placeholder="Search by First or Last Name.."
+          name="filterUser">
+      </div>
+    </div>
+  </form>
+
+  <div class="table-responsive-sm" style="margin-top:10px;">
+    <table class="table table-sm" *ngIf="filterUsers && filterUsers.length">
+      <thead class="thead-light ">
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Id</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filterUsers">
+          <td>{{user.firstName | uppercase}}</td>
+          <td>{{user.lastName | uppercase}}</td>
+          <td>{{user.employeeID | uppercase}}</td>
+          <td>
+            <button type="button" class="btn btn-info btn-block btn-sm"
+              (click)="selectUser(user.userId, user.firstName, user.lastName)">Select</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-10">
+      <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" (click)="onClose()">Close</button>
+      <button type="submit" class="btn btn-primary btn-sm" (click)="deleteTask()" style="margin:5px;">Delete</button>
+    </div>
+  </div>
+</div>

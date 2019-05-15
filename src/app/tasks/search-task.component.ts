@@ -80,7 +80,6 @@ export class SearchTaskComponent implements OnInit, OnChanges, DoCheck {
     this._taskName = value;
     this.filters["taskName"] = value;
     this.applyFilters();
-
   }
 
   get filterParentTask(): number {
