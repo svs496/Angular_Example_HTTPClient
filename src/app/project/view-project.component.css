@@ -1,0 +1,11 @@
+.fieldLabels{
+    font-weight:bold;
+    font-size: small;
+    color: rgb(54, 42, 165);
+    padding-right: 1%;
+
+}
+
+.fieldValues{
+    font-size: small;
+}

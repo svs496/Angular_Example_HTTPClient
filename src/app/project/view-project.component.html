@@ -1,3 +1,47 @@
-<p>
-  view-project works!
-</p>
+<div *ngIf="visibleProjects && visibleProjects.length">
+  <ul class="list-group" style="width: 50%;margin-top:0.5%">
+    <li class="list-group-item" *ngFor="let project of visibleProjects">
+      <div class="row">
+        <div class="col">
+          <label style="font-weight: bold; font-size: medium;padding-right: 2% ">Project:</label> 
+          <label style="font-weight: bold; font-size: large; color:red">{{project?.projectName}}</label>
+        </div>
+        <div class="col">
+            <label style="font-weight: bold; font-size: medium;margin-right: 2%">Priority:</label> 
+            <label style="font-weight: bold; font-size: medium; color:red;">{{project?.priority}}</label> 
+        </div>
+        <div class="col">
+            <label style="font-weight: bold; font-size: medium;margin-right: 2%">Manager:</label> 
+            <label style="font-weight: bold; font-size: medium; color:red;">{{project?.user?.firstName}} {{project?.user?.lastName}}</label> 
+        </div>
+      </div>
+      <div class="row" style="margin-top:1%">
+        <div class="col">
+          <label class="fieldLabels">No of Tasks: </label>
+          <label class="fieldValues"></label>
+        </div>
+        <div class="col">
+          <label class="fieldLabels">Completed: </label>
+          <label class="fieldValues"></label>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-info btn-block btn-sm" (click)="editProject(project.projectId)">Update</button>
+        </div>
+      </div>
+      <div class="row" style="margin-top:1%">
+        <div class="col">
+          <label class="fieldLabels">Start Date: </label>
+          <label class="fieldValues">{{project?.startDate | date:'shortDate'}}</label>
+        </div>
+        <div class="col">
+          <label class="fieldLabels">End Date: </label>
+          <label class="fieldValues">{{project?.endDate | date:'shortDate'}}</label>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-success btn-block btn-sm" (click)="suspendProject(project.projectId)">Suspend</button>
+          </div>
+      </div>
+    </li>
+
+  </ul>
+</div>

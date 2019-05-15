@@ -5,6 +5,7 @@ import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 import { ProjectService } from '../shared/project.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { ViewUserModalComponent } from '../user/view-user-modal.component';
+import { UserService } from '../shared/user.service';
 
 @Component({
   selector: 'app-add-project',
@@ -29,7 +30,7 @@ export class AddProjectComponent implements OnInit {
   };
 
   constructor(
-    private fb: FormBuilder, private bsModalService: BsModalService,
+    private fb: FormBuilder, private bsModalService: BsModalService, private userService: UserService,
     @Inject(TOASTR_TOKEN) private toastr: Toastr, private projectService: ProjectService) {
     this.addMode = true;
   }
@@ -127,20 +128,70 @@ export class AddProjectComponent implements OnInit {
       "managerName": ''
     });
 
-   
-    this.createProjectForm();
+    //this.createProjectForm();
+  }
+
+
+  changeToEditMode($event: number) {
+    this.editProjectId = $event;
+    this.addMode = false;
+    this.getProjectById();
+  }
+  getProjectById() {
+    this.projectService.getProjectById(this.editProjectId)
+      .subscribe(response => {
+        console.log(response);
+        this.projectForm.patchValue({
+          projectName: response.projectName,
+          startDate: response.startDate,
+          endDate: response.endDate,
+          priority: response.priority
+        });
+
+        this.projectForm.controls['managerName'].setValue(response.user.firstName + ' ' + response.user.lastName);
+        this.managerId = response.userId;
+
+      });
+  }
+
+  edit() {
+    if (this.projectForm.valid) {
+
+      this.maptoModal();
+      this.project.projectId = this.editProjectId;
+
+      this.projectService.editProject(this.editProjectId, this.project )
+        .subscribe(resp => {
+          this.toastr.success('Project edit success!');
+          this.restFormAndCallService();
+        },
+          (error => {
+            this.toastr.error("Some thing went wrong... Contact Administrator.")
+            console.error(error);
+          })
+        );
+
+    }
+  }
+
+  private maptoModal() {
+    this.project = null;
+    this.project = {
+      projectName: this.projectForm.value.projectName,
+      priority: this.projectForm.value.priority,
+      startDate: this.projectForm.value.dateGroup.startDate,
+      endDate: this.projectForm.value.dateGroup.endDate,
+      userId: this.managerId,
+      projectId: 0,
+      user:null,
+      tasks:null
+    };
   }
 
   onSubmit(): void {
     if (this.projectForm.valid) {
-      var prjct = {
-        projectName: this.projectForm.value.projectName,
-        priority: this.projectForm.value.priority,
-        startDate: this.projectForm.value.dateGroup.startDate,
-        endDate: this.projectForm.value.dateGroup.endDate,
-        userId: this.managerId
-      };
-      this.projectService.addProject(prjct)
+      this.maptoModal();
+      this.projectService.addProject(this.project)
         .subscribe(res => {
           this.toastr.success('New project added!');
           this.restFormAndCallService();
@@ -160,10 +211,6 @@ export class AddProjectComponent implements OnInit {
       const abstractControl = group.get(key);
       this.formErrors[key] = '';
 
-      if (key === 'startDate') {
-
-        console.log(abstractControl);
-      }
 
       if (abstractControl && !abstractControl.valid &&
         (abstractControl.touched || abstractControl.dirty || abstractControl.value !== '')) {

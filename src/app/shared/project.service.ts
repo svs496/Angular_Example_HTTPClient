@@ -23,6 +23,16 @@ export class ProjectService {
   }
 
 
+  getProjectById(id: number): Observable<IProject> {
+    return this.http.get<IProject>(this.envUrl.urlAddress + 'api/project/' + id)
+      .pipe(
+        map(res => {
+          return res as IProject;
+        }),
+        catchError((e: Response) => this.handleError(e))
+      );
+  }
+
   getUsers(): Observable<IProject[]> {
     return this.http.get<IProject[]>(this.envUrl.urlAddress + 'api/project')
       .pipe(
@@ -33,15 +43,15 @@ export class ProjectService {
       );
   }
 
-  addProject(project: any): Observable<any> {
+  addProject(project: IProject): Observable<IProject> {
     console.log(JSON.stringify(project));
-    return this.http.post<any>(this.envUrl.urlAddress + 'api/project/', JSON.stringify(project), ProjectService.httpOptions).pipe(
+    return this.http.post<IProject>(this.envUrl.urlAddress + 'api/project/', JSON.stringify(project), ProjectService.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  editUser(id: number, project: IProject): Observable<any> {
-    return this.http.put(this.envUrl.urlAddress + 'api/project/' + id, JSON.stringify(project), ProjectService.httpOptions).pipe(
+  editProject(id: number, project: IProject): Observable<any> {
+    return this.http.put<IProject>(this.envUrl.urlAddress + 'api/project/' + id, JSON.stringify(project), ProjectService.httpOptions).pipe(
       tap(_ => console.log(`updated user id=${id}`)),
       catchError(this.handleError)
     );

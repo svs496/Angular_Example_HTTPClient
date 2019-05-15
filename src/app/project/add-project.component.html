@@ -87,7 +87,7 @@
                     <button type="submit" class="btn btn-primary btn-sm" [disabled]="projectForm.invalid">Add</button>
                 </div>
                 <div *ngIf="!addMode" class="col-sm-1">
-                    <button type="button" class="btn btn-danger btn-sm" (click)="edit()">Edit</button>
+                    <button type="button" class="btn btn-danger btn-sm" [disabled]="projectForm.invalid" (click)="edit()">Edit</button>
                 </div>
                 <div class="col-sm-1">
                     <button type="button" class="btn btn-info btn-sm" (click)="cancel()">Cancel</button>
@@ -104,7 +104,7 @@
             <input type="text" class="form-control" placeholder="Search..">
         </div>
         <div>
-            <label for="manager" class="col-form-label">Sort: </label>&nbsp;
+            <label for="manager" class="col-form-label col-form-label-sm">Sort: </label>&nbsp;
             <button class="btn btn-primary btn-sm" [class.active]="sortBy ==='startDate'"
                 (click)="sortBy ='startDate'">Start
                 Date</button>&nbsp;
