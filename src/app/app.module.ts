@@ -24,6 +24,7 @@ import { AddProjectComponent } from './project/add-project.component';
 import { UserService } from './shared/user.service';
 import { ProjectService } from './shared/project.service';
 import { ViewUserComponent } from './user/view-user.component';
+import { ViewProjectComponent } from './project/view-project.component';
 
 let toastr: Toastr = window['toastr'];
 let jQuery = window['$'];
@@ -41,7 +42,8 @@ let jQuery = window['$'];
     NavBarComponent,
     AddUserComponent,
     AddProjectComponent,
-    ViewUserComponent
+    ViewUserComponent,
+    ViewProjectComponent
   ],
   imports: [
     BrowserModule,

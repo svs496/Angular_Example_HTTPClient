@@ -50,7 +50,6 @@ export class AddUserComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log("11");
 
     this.getAllUsers();
 

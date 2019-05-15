@@ -18,32 +18,33 @@
                 </div>
             </div>
 
-            <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.projectDate}">
+            <div formGroupName="dateGroup">
+                <div class="form-group row">
 
-                <div class="col-md-5">
-                    <div class="float-right form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                        <label class="col-form-label col-form-label-sm" for="inlineCheckbox1">Set Start and End
-                            Date</label>
+                    <div class="col-md-5">
+                        <div class="float-right form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                            <label class="col-form-label col-form-label-sm" for="inlineCheckbox1">Set Start and End
+                                Date</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3" [ngClass]="{'alert alert-danger': formErrors.startDate}">
+                        <input type="date" class="form-control form-control-sm" formControlName="startDate"
+                            id="startDate" (blur)="logValidationErrors()" placeholder="Start Date..">
+                        <span class="help-block" *ngIf="formErrors.startDate">
+                            {{formErrors.startDate}}
+                        </span>
+                    </div>
+                    <div class="col-md-3"
+                        [ngClass]="{'alert alert-danger': formErrors.endDate || formErrors.dateGroup}">
+                        <input type="date" class="form-control form-control-sm" formControlName="endDate" id="endDate"
+                            (blur)="logValidationErrors()" placeholder="End Date..">
+                        <span class="help-block" *ngIf="formErrors.endDate || formErrors.dateGroup">
+                            {{formErrors.endDate ?  formErrors.endDate : formErrors.dateGroup}}
+                        </span>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <input type="date" class="form-control form-control-sm" formControlName="startDate" id="startDate"
-                        (blur)="logValidationErrors()" placeholder="Start Date..">
-                    <span class="help-block" *ngIf="formErrors.startDate">
-                        {{formErrors.startDate}}
-                    </span>
-                </div>
-                <div class="col-md-3">
-                    <input type="date" class="form-control form-control-sm" formControlName="endDate" id="endDate"
-                        (blur)="logValidationErrors()" placeholder="End Date..">
-                    <span class="help-block" *ngIf="formErrors.endDate">
-                        {{formErrors.endDate}}
-                    </span>
-                </div>
             </div>
-
-
 
             <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.priority}">
                 <label for="priority" class="col-sm-2 col-form-label-sm" style="margin-top:15px">Priority:</label>
@@ -69,7 +70,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.manager}">
                 <label for="manager" class="col-sm-2 col-form-label col-form-label-sm">Manager:</label>
@@ -101,23 +101,24 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="Search..">
+<div *ngIf="allProjects && allProjects.length">
+    <div class="row">
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Search..">
+        </div>
+        <div>
+            <label for="manager" class="col-form-label">Sort: </label>&nbsp;
+            <button class="btn btn-primary btn-sm" [class.active]="sortBy ==='startDate'"
+                (click)="sortBy ='startDate'">Start
+                Date</button>&nbsp;
+            <button class="btn btn-danger btn-sm" [class.active]="sortBy ==='endDate'" (click)="sortBy ='endDate'">End
+                Date</button> &nbsp;
+            <button class="btn btn-secondary btn-sm" [class.active]="sortBy ==='priority'"
+                (click)="sortBy ='priority'">Priority</button> &nbsp;
+            <button class="btn btn-dark btn-sm" [class.active]="sortBy ==='status'"
+                (click)="sortBy ='status'">Status</button>
+        </div>
     </div>
-    <div>
-        <label for="manager" class="col-form-label">Sort: </label>&nbsp;
-        <button class="btn btn-primary btn-sm" [class.active]="sortBy ==='startDate'"
-            (click)="sortBy ='startDate'">Start
-            Date</button>&nbsp;
-        <button class="btn btn-danger btn-sm" [class.active]="sortBy ==='endDate'" (click)="sortBy ='endDate'">End
-            Date</button> &nbsp;
-        <button class="btn btn-secondary btn-sm" [class.active]="sortBy ==='priority'"
-            (click)="sortBy ='priority'">Priority</button> &nbsp;
-        <button class="btn btn-dark btn-sm" [class.active]="sortBy ==='status'"
-            (click)="sortBy ='status'">Status</button>
-    </div>
+    <app-view-project [projects]="allProjects" [sortBy]="sortBy" (editMessageEvent)="changeToEditMode($event)"
+        (deleteMessageEvent)="deleteComplete($event)"></app-view-project>
 </div>
-
-<app-view-user [users]="allUsers" [sortBy]="sortBy" (editMessageEvent)="changeToEditMode($event)"
-    (deleteMessageEvent)="deleteComplete($event)"></app-view-user>

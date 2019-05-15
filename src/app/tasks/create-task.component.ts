@@ -48,11 +48,11 @@ export class CreateTaskComponent implements OnInit {
   };
 
   formErrors = {
-    "taskName" : '',
-    "priority" : '',
-    "startDate" :'',
-    "endDate" :'',
-    "dateGroup" : ''
+    "taskName": '',
+    "priority": '',
+    "startDate": '',
+    "endDate": '',
+    "dateGroup": ''
   };
 
   cancel() {
@@ -80,8 +80,6 @@ export class CreateTaskComponent implements OnInit {
 
     this.title = "Create Task"
     this.subHeading = "Add new task details :"
-
-
   } // end ngOnInit
 
 
@@ -191,6 +189,4 @@ function compareDate(group: AbstractControl): { [key: string]: any } | null {
   if (startDate && endDate) {
     return null
   }
-
-
 }
