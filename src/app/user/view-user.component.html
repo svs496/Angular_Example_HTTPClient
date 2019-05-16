@@ -1,25 +1,47 @@
-<div class="table-responsive-sm" style="margin-top:10px; width:50%">
-    <table class="table table-sm" *ngIf="visibleUsers && visibleUsers.length">
-      <thead class="thead-dark">
-        <tr>
-          <th>Firstname</th>
-          <th>Lastname</th>
-          <th>Id</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of visibleUsers">
-          <td>{{user.firstName | uppercase}}</td>
-          <td>{{user.lastName | uppercase}}</td>
-          <td>{{user.employeeID | uppercase}}</td>
-          <td>
-            <button type="button" class="btn btn-info btn-block btn-sm" (click)="editUser(user.userId)">Edit</button>
-          </td>
-          <td>
-            <button type="button" class="btn btn-danger btn-block btn-sm" (click)="deleteUser(user.userId) ">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-  
-    </table>
+<form id="filterUsers" autocomplete="off" #filterSearchForm="ngForm" novalidate>
+  <div class="row">
+    <div class="col-md-3">
+        <input type="text" class="form-control" id="filterUser" [(ngModel)]="filterUser"  name="filterUser"
+        placeholder="Search..">
+    </div>
+    <div>
+      <label for="lastName" class="col-form-label col-form-label-sm">Sort: </label>&nbsp;
+      <button class="btn btn-primary btn-sm" [class.active]="sortBy ==='firstName'"
+        (click)="setSortValue('firstName')">First
+        Name</button>&nbsp;
+      <button class="btn btn-danger btn-sm" [class.active]="sortBy ==='lastName'"
+        (click)="setSortValue('lastName')">Last
+        Name</button> &nbsp;
+      <button class="btn btn-dark btn-sm" [class.active]="sortBy ==='employeeID'"
+        (click)="setSortValue('employeeID')">Employee
+        Id</button>
+    </div>
   </div>
+</form>
+
+<div class="table-responsive-sm" style="margin-top:10px; width:50%">
+  <table class="table table-sm" *ngIf="visibleUsers && visibleUsers.length">
+    <thead class="thead-dark">
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Id</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of visibleUsers">
+        <td>{{user.firstName | uppercase}}</td>
+        <td>{{user.lastName | uppercase}}</td>
+        <td>{{user.employeeID | uppercase}}</td>
+        <td>
+          <button type="button" class="btn btn-info btn-block btn-sm" (click)="editUser(user.userId)">Edit</button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-danger btn-block btn-sm"
+            (click)="deleteUser(user.userId) ">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+</div>

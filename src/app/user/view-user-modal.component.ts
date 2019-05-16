@@ -13,7 +13,7 @@ export class ViewUserModalComponent implements OnInit {
   users: IUser[] = [];
   filterUsers: IUser[] = [];
   _customFilter: string;
-  ;
+  
   event: EventEmitter<any> = new EventEmitter();
 
   get filterUser(): string {

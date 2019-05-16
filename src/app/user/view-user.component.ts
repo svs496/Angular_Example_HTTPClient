@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { IUser } from '../model/user.model';
 import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 import { UserService } from '../shared/user.service';
@@ -6,37 +6,69 @@ import { UserService } from '../shared/user.service';
 @Component({
   selector: 'app-view-user',
   templateUrl: './view-user.component.html',
-  styleUrls: ['./view-user.component.css']
+  styleUrls: ['./view-user.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewUserComponent implements OnInit, OnChanges {
 
   @Input() users: IUser[];
-  @Input() sortBy: string;
+  sortBy: string = 'firstName';
   visibleUsers: IUser[] = [];
+  _customFilter: string;
+
 
   @Output() editMessageEvent = new EventEmitter<number>();
   @Output() deleteMessageEvent = new EventEmitter<string>();
 
   ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
+    this.SortAndFilterUsers();
+  }
+  constructor(@Inject(TOASTR_TOKEN) private toastr: Toastr, private userService: UserService) { }
+
+  private SortAndFilterUsers() {
+
     if (this.users) {
-      this.visibleUsers = this.users;
+      this.visibleUsers = [];
+
+      
+      if (this._customFilter && this._customFilter.length > 0) {
+        this.visibleUsers = this.users.filter(usr =>
+          (usr.firstName.toLowerCase().indexOf(this._customFilter) !== -1)
+          || (usr.lastName.toLowerCase().indexOf(this._customFilter) !== -1)
+        );
+      }
+      else
+        this.visibleUsers = this.users;
+
+        console.log(this.sortBy);
       if (this.sortBy === 'firstName') {
         this.visibleUsers.sort(sortByFirstName);
       }
       else if (this.sortBy === 'lastName') {
         this.visibleUsers.sort(sortByLastName);
       }
-
       else if (this.sortBy === 'employeeID') {
         this.visibleUsers.sort(sortByemployeeID);
       }
-
     }
   }
-  constructor(@Inject(TOASTR_TOKEN) private toastr: Toastr, private userService: UserService) { }
 
   ngOnInit() {
   }
+
+  setSortValue(sortString: string) {
+    this.sortBy = sortString;
+    this.SortAndFilterUsers();
+  }
+
+  get filterUser(): string {
+    return this._customFilter;
+  }
+  set filterUser(value: string) {
+    this._customFilter = value;
+    this.SortAndFilterUsers();
+  }
+
 
   editUser(id: number) {
     this.editMessageEvent.emit(id);
