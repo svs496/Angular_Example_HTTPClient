@@ -23,22 +23,27 @@
 
                     <div class="col-md-5">
                         <div class="float-right form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                (change)="SetStartandEndDate($event)" value="option1">
                             <label class="col-form-label col-form-label-sm" for="inlineCheckbox1">Set Start and End
                                 Date</label>
                         </div>
                     </div>
                     <div class="col-md-3" [ngClass]="{'alert alert-danger': formErrors.startDate}">
-                        <input type="date" class="form-control form-control-sm" formControlName="startDate"
-                            id="startDate" (blur)="logValidationErrors()" placeholder="Start Date..">
+                        <input type="text" bsDatepicker class="form-control"
+                            value="{{projectForm.get('dateGroup').get('startDate').value | date: 'shortDate'}}"
+                            formControlName="startDate" id="startDate" [bsConfig]="{ showWeekNumbers:false}"
+                            (blur)="logValidationErrors()">
                         <span class="help-block" *ngIf="formErrors.startDate">
                             {{formErrors.startDate}}
                         </span>
                     </div>
                     <div class="col-md-3"
                         [ngClass]="{'alert alert-danger': formErrors.endDate || formErrors.dateGroup}">
-                        <input type="date" class="form-control form-control-sm" formControlName="endDate" id="endDate"
-                            (blur)="logValidationErrors()" placeholder="End Date..">
+                        <input type="text" bsDatepicker [minDate]="minDate" [bsConfig]="{ showWeekNumbers:false}"
+                            class="form-control" formControlName="endDate" id="endDate"
+                            value="{{projectForm.get('dateGroup').get('endDate').value | date: 'shortDate'}}"
+                            (blur)="logValidationErrors()">
                         <span class="help-block" *ngIf="formErrors.endDate || formErrors.dateGroup">
                             {{formErrors.endDate ?  formErrors.endDate : formErrors.dateGroup}}
                         </span>
@@ -74,8 +79,8 @@
             <div class="form-group row">
                 <label for="managerName" class="col-sm-2 col-form-label col-form-label-sm">Manager:</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control form-control-sm" formControlName="managerName" id="managerName"
-                        placeholder="Search Manager..">
+                    <input type="text" class="form-control form-control-sm" formControlName="managerName"
+                        id="managerName" placeholder="Search Manager..">
                 </div>
                 <div>
                     <button type="button" class="buttonRound" (click)="searchProjectManager()">Search</button>
@@ -87,7 +92,8 @@
                     <button type="submit" class="btn btn-primary btn-sm" [disabled]="projectForm.invalid">Add</button>
                 </div>
                 <div *ngIf="!addMode" class="col-sm-1">
-                    <button type="button" class="btn btn-danger btn-sm" [disabled]="projectForm.invalid" (click)="edit()">Edit</button>
+                    <button type="button" class="btn btn-danger btn-sm" [disabled]="projectForm.invalid"
+                        (click)="edit()">Edit</button>
                 </div>
                 <div class="col-sm-1">
                     <button type="button" class="btn btn-info btn-sm" (click)="cancel()">Cancel</button>

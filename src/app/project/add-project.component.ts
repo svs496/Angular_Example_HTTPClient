@@ -109,9 +109,11 @@ export class AddProjectComponent implements OnInit {
   private restFormAndCallService() {
     this.projectForm.reset({
       "projectName": '',
-      "priority": '',
-      "startDate": '',
-      "endDate": '',
+      "priority": '0',
+      "dateGroup": {
+        "startDate": '',
+        "endDate": ''
+      },
       "managerName": ''
     });
     this.getAllProjects();
@@ -123,8 +125,10 @@ export class AddProjectComponent implements OnInit {
     this.projectForm.reset({
       "projectName": '',
       "priority": '0',
-      "startDate": new Date().toISOString().substring(0, 10),
-      "endDate": new Date().toISOString().substring(0, 10),
+      "dateGroup": {
+        "startDate": '',
+        "endDate": ''
+      },
       "managerName": ''
     });
 
@@ -140,13 +144,16 @@ export class AddProjectComponent implements OnInit {
   getProjectById() {
     this.projectService.getProjectById(this.editProjectId)
       .subscribe(response => {
-        console.log(response);
         this.projectForm.patchValue({
           projectName: response.projectName,
-          startDate: response.startDate,
-          endDate: response.endDate,
+          dateGroup:
+          {
+            startDate: response.startDate,
+            endDate: response.endDate
+          },
           priority: response.priority
         });
+
 
         this.projectForm.controls['managerName'].setValue(response.user.firstName + ' ' + response.user.lastName);
         this.managerId = response.userId;
@@ -160,7 +167,7 @@ export class AddProjectComponent implements OnInit {
       this.maptoModal();
       this.project.projectId = this.editProjectId;
 
-      this.projectService.editProject(this.editProjectId, this.project )
+      this.projectService.editProject(this.editProjectId, this.project)
         .subscribe(resp => {
           this.toastr.success('Project edit success!');
           this.restFormAndCallService();
@@ -183,8 +190,8 @@ export class AddProjectComponent implements OnInit {
       endDate: this.projectForm.value.dateGroup.endDate,
       userId: this.managerId,
       projectId: 0,
-      user:null,
-      tasks:null
+      user: null,
+      tasks: null
     };
   }
 
@@ -204,6 +211,17 @@ export class AddProjectComponent implements OnInit {
     }
   }
 
+  SetStartandEndDate(check: any) {
+    if (check.target.checked) {
+      this.projectForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
+      this.projectForm.get('dateGroup').get('endDate').setValue(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+    }
+    else {
+      this.projectForm.get('dateGroup').get('startDate').setValue('');
+      this.projectForm.get('dateGroup').get('endDate').setValue('');
+
+    }
+  }
 
   //loop through form controls and formgroup. both derrive from abstract control
   logValidationErrors(group: FormGroup = this.projectForm) {
