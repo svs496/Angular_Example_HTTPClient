@@ -105,23 +105,7 @@
 </div>
 
 <div *ngIf="allProjects && allProjects.length">
-    <div class="row">
-        <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Search..">
-        </div>
-        <div>
-            <label for="manager" class="col-form-label col-form-label-sm">Sort: </label>&nbsp;
-            <button class="btn btn-primary btn-sm" [class.active]="sortBy ==='startDate'"
-                (click)="sortBy ='startDate'">Start
-                Date</button>&nbsp;
-            <button class="btn btn-danger btn-sm" [class.active]="sortBy ==='endDate'" (click)="sortBy ='endDate'">End
-                Date</button> &nbsp;
-            <button class="btn btn-secondary btn-sm" [class.active]="sortBy ==='priority'"
-                (click)="sortBy ='priority'">Priority</button> &nbsp;
-            <button class="btn btn-dark btn-sm" [class.active]="sortBy ==='status'"
-                (click)="sortBy ='status'">Status</button>
-        </div>
-    </div>
-    <app-view-project [projects]="allProjects" [sortBy]="sortBy" (editMessageEvent)="changeToEditMode($event)"
+   
+    <app-view-project [projects]="allProjects" (editMessageEvent)="changeToEditMode($event)"
         (deleteMessageEvent)="deleteComplete($event)"></app-view-project>
 </div>

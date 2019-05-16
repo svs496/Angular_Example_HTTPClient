@@ -1,18 +1,40 @@
+<form id="filterProjects" autocomplete="off" #filterSearchForm="ngForm" novalidate>
+    <div class="row">
+      <div class="col-md-3">
+          <input type="text" class="form-control" id="filterProject" [(ngModel)]="filterProject"  name="filterProject"
+          placeholder="Search..">
+      </div>
+      <div>
+        <label for="manager" class="col-form-label col-form-label-sm">Sort: </label>&nbsp;
+        <button class="btn btn-primary btn-sm" [class.active]="sortBy ==='startDate'"
+          (click)="setSortValue('startDate')">Start
+          Date</button>&nbsp;
+        <button class="btn btn-danger btn-sm" [class.active]="sortBy ==='endDate'" (click)="sortBy ='endDate'">End
+          Date</button> &nbsp;
+        <button class="btn btn-secondary btn-sm" [class.active]="sortBy ==='priority'"
+          (click)="setSortValue('priority')">Priority</button> &nbsp;
+        <button class="btn btn-dark btn-sm" [class.active]="sortBy ==='status'"
+          (click)="setSortValue('status')">Status</button>
+      </div>
+    </div>
+  </form>
+  
 <div *ngIf="visibleProjects && visibleProjects.length">
   <ul class="list-group" style="width: 50%;margin-top:0.5%">
     <li class="list-group-item" *ngFor="let project of visibleProjects">
       <div class="row">
         <div class="col">
-          <label style="font-weight: bold; font-size: medium;padding-right: 2% ">Project:</label> 
+          <label style="font-weight: bold; font-size: medium;padding-right: 2% ">Project:</label>
           <label style="font-weight: bold; font-size: large; color:red">{{project?.projectName}}</label>
         </div>
         <div class="col">
-            <label style="font-weight: bold; font-size: medium;margin-right: 2%">Priority:</label> 
-            <label style="font-weight: bold; font-size: medium; color:red;">{{project?.priority}}</label> 
+          <label style="font-weight: bold; font-size: medium;margin-right: 2%">Priority:</label>
+          <label style="font-weight: bold; font-size: medium; color:red;">{{project?.priority}}</label>
         </div>
         <div class="col">
-            <label style="font-weight: bold; font-size: medium;margin-right: 2%">Manager:</label> 
-            <label style="font-weight: bold; font-size: medium; color:red;">{{project?.user?.firstName}} {{project?.user?.lastName}}</label> 
+          <label style="font-weight: bold; font-size: medium;margin-right: 2%">Manager:</label>
+          <label style="font-weight: bold; font-size: medium; color:red;">{{project?.user?.firstName}}
+            {{project?.user?.lastName}}</label>
         </div>
       </div>
       <div class="row" style="margin-top:1%">
@@ -25,7 +47,8 @@
           <label class="fieldValues"></label>
         </div>
         <div class="col-sm-2">
-            <button type="button" class="btn btn-info btn-block btn-sm" (click)="editProject(project.projectId)">Update</button>
+          <button type="button" class="btn btn-info btn-block btn-sm"
+            (click)="editProject(project.projectId)">Update</button>
         </div>
       </div>
       <div class="row" style="margin-top:1%">
@@ -38,10 +61,20 @@
           <label class="fieldValues">{{project?.endDate | date:'shortDate'}}</label>
         </div>
         <div class="col-sm-2">
-            <button type="button" class="btn btn-success btn-block btn-sm" (click)="suspendProject(project.projectId)">Suspend</button>
-          </div>
+          <button type="button" class="btn btn-success btn-block btn-sm"
+            (click)="suspendProject(project.projectId)">Suspend</button>
+        </div>
       </div>
     </li>
 
   </ul>
 </div>
+
+
+<div *ngIf="visibleProjects.length == 0">
+    <div class="row" style="padding-top:2%">
+      <div class = "col-md-3 text-center">
+          <label style="font-weight: bold; font-size: large; font-style: italic;color: crimson">No Projects Found.</label>
+      </div>
+    </div>
+  </div>

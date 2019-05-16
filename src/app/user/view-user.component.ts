@@ -30,7 +30,7 @@ export class ViewUserComponent implements OnInit, OnChanges {
     if (this.users) {
       this.visibleUsers = [];
 
-      
+
       if (this._customFilter && this._customFilter.length > 0) {
         this.visibleUsers = this.users.filter(usr =>
           (usr.firstName.toLowerCase().indexOf(this._customFilter) !== -1)
@@ -40,7 +40,6 @@ export class ViewUserComponent implements OnInit, OnChanges {
       else
         this.visibleUsers = this.users;
 
-        console.log(this.sortBy);
       if (this.sortBy === 'firstName') {
         this.visibleUsers.sort(sortByFirstName);
       }

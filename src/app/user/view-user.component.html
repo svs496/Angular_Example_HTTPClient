@@ -1,7 +1,7 @@
 <form id="filterUsers" autocomplete="off" #filterSearchForm="ngForm" novalidate>
   <div class="row">
     <div class="col-md-3">
-        <input type="text" class="form-control" id="filterUser" [(ngModel)]="filterUser"  name="filterUser"
+      <input type="text" class="form-control" id="filterUser" [(ngModel)]="filterUser" name="filterUser"
         placeholder="Search..">
     </div>
     <div>
@@ -19,29 +19,40 @@
   </div>
 </form>
 
-<div class="table-responsive-sm" style="margin-top:10px; width:50%">
-  <table class="table table-sm" *ngIf="visibleUsers && visibleUsers.length">
-    <thead class="thead-dark">
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Id</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of visibleUsers">
-        <td>{{user.firstName | uppercase}}</td>
-        <td>{{user.lastName | uppercase}}</td>
-        <td>{{user.employeeID | uppercase}}</td>
-        <td>
-          <button type="button" class="btn btn-info btn-block btn-sm" (click)="editUser(user.userId)">Edit</button>
-        </td>
-        <td>
-          <button type="button" class="btn btn-danger btn-block btn-sm"
-            (click)="deleteUser(user.userId) ">Delete</button>
-        </td>
-      </tr>
-    </tbody>
+<div *ngIf="visibleUsers && visibleUsers.length">
+  <div class="table-responsive-sm" style="margin-top:10px; width:50%">
+    <table class="table table-sm" *ngIf="visibleUsers && visibleUsers.length">
+      <thead class="thead-dark">
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Id</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of visibleUsers">
+          <td>{{user.firstName | uppercase}}</td>
+          <td>{{user.lastName | uppercase}}</td>
+          <td>{{user.employeeID | uppercase}}</td>
+          <td>
+            <button type="button" class="btn btn-info btn-block btn-sm" (click)="editUser(user.userId)">Edit</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-block btn-sm"
+              (click)="deleteUser(user.userId) ">Delete</button>
+          </td>
+        </tr>
+      </tbody>
 
-  </table>
+    </table>
+  </div>
+
+</div>
+
+<div *ngIf="visibleUsers.length == 0">
+    <div class="row" style="padding-top:2%">
+    <div class = "col-md-3 text-center">
+        <label style="font-weight: bold; font-size: medium; font-style: italic;color: crimson">No Users Found</label>
+    </div>
+  </div>
 </div>
