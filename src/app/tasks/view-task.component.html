@@ -1,0 +1,64 @@
+<form id="frmFilterTasks" autocomplete="off" #filterSearchForm="ngForm" novalidate>
+    <div class="row" style="margin-top:1%">
+
+        <div class="col-md-4">
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="projectName" name="projectName"
+                id="projectName" placeholder="Search Project..">
+        </div>
+        <div>
+            <button type="button" class="btn btn-dark btn-sm" (click)="selectProject()">Search</button>
+        </div>
+
+        <div class="col-md-6">
+            <label for="sortbtn" class="col-form-label col-form-label-sm">Sort: </label>&nbsp;
+            <button id="sortbtn" class="btn btn-primary btn-sm" [class.active]="sortBy ==='startDate'"
+                (click)="setSortValue('startDate')">Start
+                Date</button>&nbsp;
+            <button class="btn btn-danger btn-sm" [class.active]="sortBy ==='endDate'" (click)="sortBy ='endDate'">End
+                Date</button> &nbsp;
+            <button class="btn btn-secondary btn-sm" [class.active]="sortBy ==='priority'"
+                (click)="setSortValue('priority')">Priority</button> &nbsp;
+            <button class="btn btn-dark btn-sm" [class.active]="sortBy ==='status'"
+                (click)="setSortValue('status')">Status</button>
+        </div>
+    </div>
+</form>
+
+<div *ngIf="taskList && taskList.length >0" style="margin-top:1%; width: 60%">
+        <hr />
+    <div *ngFor = "let task of taskList" [ngClass]="{'alert-success': task.status == 2}">
+        <div class="row">
+            <div class="col-sm-2" style="font-weight: bold; font-size: medium;">Task</div>
+            <div class="col-sm-2" style="font-weight: bold; font-size: medium;">Parent</div>
+            <div class="col-sm-auto" style="font-weight: bold; font-size: medium;">Priority</div>
+            <div class="col-sm-1" style="font-weight: bold; font-size: medium;">Start</div>
+            <div class="col ml-6" style="font-weight: bold; font-size: medium;">End</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">{{task.taskName | uppercase}}</div>
+            <div class="col-sm-2" *ngIf="!task.parentTaskName;" style="color: red">No Parent Task</div>
+            <div class="col-sm-2" *ngIf="task.parentTaskName;">{{task.parentTaskName | uppercase}}</div>
+
+            <div class="col-sm-auto">{{task.priority}}</div>
+            <div class="col-sm-auto ml-5">{{task?.startDate | date:'shortDate'}}</div>
+            <div class="col ml-2">{{task?.endDate | date:'shortDate'}}</div>
+            <div class="col"><button type="button" class="btn btn-info btn-block btn-sm" [disabled]="task.status == 2"
+                    (click)="editTask(task.taskId)">Edit</button>
+            </div>
+            <div class="col"><button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="task.status == 2"
+                    (click)="endTask(task.taskId)">End task</button></div>
+            <div class="col"><button type="button" class="btn btn-danger btn-block btn-sm"
+                    (click)="deleteTask(task.taskId) ">Delete</button></div>
+        </div>
+
+        <hr />
+    </div>
+</div>
+
+<div *ngIf="taskList.length == 0">
+        <div class="row" style="padding-top:2%">
+        <div class = "col-md-6 text-center">
+            <label style="font-weight: bold; font-size: medium; font-style: italic;color: crimson">No tasks Found for this project</label>
+        </div>
+      </div>
+    </div>

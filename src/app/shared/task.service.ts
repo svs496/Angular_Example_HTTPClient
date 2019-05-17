@@ -34,7 +34,7 @@ export class TaskService {
   }
 
   getTasks(): Observable<ITask[]> {
-    return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/task')
+    return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/task/get/')
       .pipe(
         map(res => {
           return res as ITask[];
@@ -45,7 +45,7 @@ export class TaskService {
 
 
   getTaskById(id: number): Observable<ITask> {
-    return this.http.get<ITask>(this.envUrl.urlAddress + 'api/task/' + id)
+    return this.http.get<ITask>(this.envUrl.urlAddress + 'api/task/get/' + id)
       .pipe(
         map(res => {
           return res as ITask;
@@ -54,21 +54,34 @@ export class TaskService {
       );
   }
 
+
+  getTasksByProjectId(id: number): Observable<ITask[]> {
+    return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/task/GetTasksByProjectId/' + id)
+      .pipe(
+        map(res => {
+          return res as ITask[];
+        }),
+        catchError((e: Response) => this.handleError(e))
+      );
+  }
+
+
+
   addTask(task: any): Observable<any> {
-    return this.http.post<any>(this.envUrl.urlAddress + 'api/task/', JSON.stringify(task), TaskService.httpOptions).pipe(
+    return this.http.post<any>(this.envUrl.urlAddress + 'api/task/post', JSON.stringify(task), TaskService.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
   editTask(id:number,task: ITask): Observable<any> {
-    return this.http.put(this.envUrl.urlAddress + 'api/task/' + id, JSON.stringify(task), TaskService.httpOptions).pipe(
+    return this.http.put(this.envUrl.urlAddress + 'api/task/put/' + id, JSON.stringify(task), TaskService.httpOptions).pipe(
       tap(_ => console.log(`updated task id=${id}`)),
       catchError(this.handleError)
     );
   }
 
   deleteTask(id: number) : Observable<any> {
-    return this.http.delete<any>(this.envUrl.urlAddress + 'api/task/' + id, TaskService.httpOptions).pipe(
+    return this.http.delete<any>(this.envUrl.urlAddress + 'api/task/delete/' + id, TaskService.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
@@ -78,7 +91,7 @@ export class TaskService {
   }
 
   getParentTasks(): Observable<ITask[]> {
-    return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/parenttask')
+    return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/task/GetParentTasks/')
       .pipe(
         map(res => {
           return res as ITask[];
