@@ -44,7 +44,6 @@ export class ProjectService {
   }
 
   addProject(project: IProject): Observable<IProject> {
-    console.log(JSON.stringify(project));
     return this.http.post<IProject>(this.envUrl.urlAddress + 'api/project/', JSON.stringify(project), ProjectService.httpOptions).pipe(
       catchError(this.handleError)
     );

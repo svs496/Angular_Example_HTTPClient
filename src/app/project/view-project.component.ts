@@ -72,6 +72,7 @@ export class ViewProjectComponent implements OnInit, OnChanges {
     this.editMessageEvent.emit(id);
   }
   ngOnInit() {
+    //this.visibleProjects = this.projects;
   }
 
 }

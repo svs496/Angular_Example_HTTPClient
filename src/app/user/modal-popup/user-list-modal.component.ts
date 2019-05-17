@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap';
 import { IUser } from '../../model/user.model';
 import { UserService } from '../../shared/user.service';
@@ -12,6 +12,8 @@ export class UserListModalComponent implements OnInit {
   originalUserList: IUser[] = [];
   userList: IUser[] = [];
   _customFilter: string;
+  public modalHeader: string;
+  public notFoundMessage :string;
 
   event: EventEmitter<any> = new EventEmitter();
 
@@ -24,6 +26,7 @@ export class UserListModalComponent implements OnInit {
   }
 
   applyFilters() {
+   
     this.userList = [];
     this.userList = this.originalUserList.filter(usr =>
       (usr.firstName.toLowerCase().indexOf(this._customFilter) !== -1)

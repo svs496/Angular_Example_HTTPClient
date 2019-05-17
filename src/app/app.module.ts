@@ -28,6 +28,7 @@ import { EditTaskComponent } from './tasks/modal-popup/edit-task.component';
 import { EndTaskComponent } from './tasks/modal-popup/end-task.component';
 import { ParentTaskModalComponent } from './tasks/modal-popup/parent-task-modal.component';
 import { ProjectListModalComponent } from './project/modal-popup/project-list-modal.component';
+import { ViewTaskComponent } from './tasks/view-task.component';
 
 
 let toastr: Toastr = window['toastr'];
@@ -50,7 +51,8 @@ let jQuery = window['$'];
     ViewProjectComponent,
     UserListModalComponent,
     ParentTaskModalComponent,
-    ProjectListModalComponent
+    ProjectListModalComponent,
+    ViewTaskComponent
   ],
   imports: [
     BrowserModule,

@@ -11,4 +11,6 @@ export interface IProject
     userId : number
     tasks: ITask[]
     user : IUser
+    taskId :number
+    
 }

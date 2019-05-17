@@ -45,7 +45,6 @@ export class UserService {
   }
 
   addUser(user: any): Observable<any> {
-    console.log(JSON.stringify(user));
     return this.http.post<any>(this.envUrl.urlAddress + 'api/user/', JSON.stringify(user), UserService.httpOptions).pipe(
       catchError(this.handleError)
     );

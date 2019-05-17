@@ -15,10 +15,12 @@ import { ProjectListModalComponent } from '../project/modal-popup/project-list-m
 })
 export class CreateTaskComponent implements OnInit {
 
-  taskForm: FormGroup
-  userId: number
-  parentTaskId :number
-  projectId:number
+  taskForm: FormGroup;
+  userId: number;
+  parentTaskId: number;
+  projectId: number;
+  isParentTask: boolean = false;
+
 
   bsModalRef: BsModalRef
   config = {
@@ -65,18 +67,46 @@ export class CreateTaskComponent implements OnInit {
     this.taskForm = this.fb.group({
       taskName: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
       parentTask: '',
-      priority: '1',
-      userName : '',
-      projectName :'',
+      priority: '0',
+      userName: '',
+      projectName: '',
       dateGroup: this.fb.group(
         {
-          startDate: ['', Validators.required],
+          startDate: [new Date(Date.now()), Validators.required],
           endDate: ['', Validators.required]
         }, { validator: compareDate }),
     });
+    this.taskForm.controls['projectName'].disable();
+    this.taskForm.controls['parentTask'].disable();
+    this.taskForm.controls['userName'].disable();
 
     this.taskForm.valueChanges.subscribe((data) => {
       this.logValidationErrors(this.taskForm);
+    });
+  }
+
+  cancel() {
+    this.ResetCreateTaskForm();
+  }
+
+
+  private ResetCreateTaskForm() {
+    this.taskForm.get('dateGroup').get('startDate').enable();
+    this.taskForm.get('dateGroup').get('endDate').enable();
+    this.taskForm.get('priority').enable();
+    this.taskForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
+    this.isParentTask = false;
+    
+    this.taskForm.reset({
+      'taskName': '',
+      'parentTask': '',
+      'priority': '0',
+      'userName': '',
+      'projectName': '',
+      'dateGroup': {
+        'startDate': new Date(Date.now()),
+        'endDate': ''
+      }
     });
   }
 
@@ -120,35 +150,51 @@ export class CreateTaskComponent implements OnInit {
     if (this.taskForm.valid) {
 
       var tasktoAdd = {
-        parentTaskId: this.parentTaskId,
+        parentTaskId: this.isParentTask ? null : this.parentTaskId,
         taskName: this.taskForm.value.taskName,
-        priority: this.taskForm.value.priority,
-        startDate: this.taskForm.value.dateGroup.startDate,
-        endDate: this.taskForm.value.dateGroup.endDate,
+        priority: this.isParentTask ? 0 : this.taskForm.value.priority,
+        startDate: this.isParentTask ? null : this.taskForm.value.dateGroup.startDate,
+        endDate: this.isParentTask ? null : this.taskForm.value.dateGroup.endDate,
         status: 1,
         projectId: this.projectId,
-        userId: this.userId 
+        userId: this.userId
       };
 
-      this.taskService.addTask(tasktoAdd)
-        .subscribe(res => {
-          this.toastr.success('A new Task is added!');
-        },
-          (error => {
-            this.toastr.error("Some thing went wrong. Contact Administrator.")
-            console.error(error);
-          })
-        )
+      this.taskService.addTask(tasktoAdd).subscribe(res => {
+        this.toastr.success('A new Task is added!');
+        this.ResetCreateTaskForm();
+      },
+        (error => {
+          this.toastr.error("Some thing went wrong. Contact Administrator.")
+          console.error(error);
+        })
+      )
     }
   }
 
-  cancel() {
+  disableParentTaskControls(check: any) {
+    if (check.target.checked) {
+      this.taskForm.get('dateGroup').get('startDate').setValue('');
+      this.taskForm.get('dateGroup').get('startDate').disable();
+      this.taskForm.get('dateGroup').get('endDate').disable();
+      this.taskForm.get('priority').disable();
+      this.isParentTask = true;
+    }
+    else {
+      this.taskForm.get('dateGroup').get('startDate').enable();
+      this.taskForm.get('dateGroup').get('endDate').enable();
+      this.taskForm.get('priority').enable();
+      this.taskForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
+      this.isParentTask = false;
+    }
 
   }
 
-
   selectUser() {
     this.bsModalRef = this.bsModalService.show(UserListModalComponent, this.config);
+    this.bsModalRef.content.modalHeader = "User";
+    this.bsModalRef.content.notFoundMessage = "No User Record Found.";
+
     this.bsModalRef.content.event.subscribe((result: any) => {
       this.taskForm.controls['userName'].setValue(result.userName);
       this.userId = result.userId;
@@ -163,7 +209,7 @@ export class CreateTaskComponent implements OnInit {
     });
   }
 
-  
+
   selectProject() {
     this.bsModalRef = this.bsModalService.show(ProjectListModalComponent, this.config);
     this.bsModalRef.content.event.subscribe((result: any) => {

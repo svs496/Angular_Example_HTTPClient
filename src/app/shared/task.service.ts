@@ -55,7 +55,6 @@ export class TaskService {
   }
 
   addTask(task: any): Observable<any> {
-    console.log(JSON.stringify(task));
     return this.http.post<any>(this.envUrl.urlAddress + 'api/task/', JSON.stringify(task), TaskService.httpOptions).pipe(
       catchError(this.handleError)
     );

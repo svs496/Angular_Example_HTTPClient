@@ -1,7 +1,8 @@
 
 
 <div class="modal-header">
-  <h4 class="modal-title" id="add-modal-label">Select User</h4>
+  <h4 class="modal-title" id="add-modal-label">Select {{modalHeader}}
+  </h4>
   <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()"><span
       aria-hidden="true">&times;</span></button>
 
@@ -46,8 +47,8 @@
 </div>
 <div *ngIf="userList.length == 0">
     <div class="row" style="padding-top:2%">
-    <div class = "col-md-3 text-center">
-        <label style="font-weight: bold; font-size: medium; font-style: italic;color: crimson">No Users Found</label>
+    <div class = "col-md-5 text-center">
+        <label style="font-weight: bold; font-size: medium; font-style: italic;color: crimson">{{notFoundMessage}}</label>
     </div>
   </div>
 </div>

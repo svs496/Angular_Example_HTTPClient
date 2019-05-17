@@ -88,7 +88,7 @@ export class AddProjectComponent implements OnInit {
     });
   }
 
-  getAllProjects() {
+  private getAllProjects() {
     this.projectService.getProjects()
       .subscribe(response => {
         this.allProjects = [];
@@ -99,8 +99,10 @@ export class AddProjectComponent implements OnInit {
 
   selectProjectManager() {
     this.bsModalRef = this.bsModalService.show(UserListModalComponent, this.config);
-    this.bsModalRef.content.event.subscribe((result: any) => {
+    this.bsModalRef.content.modalHeader= "Manager";
+    this.bsModalRef.content.notFoundMessage= "No Manager Record Found.";
 
+    this.bsModalRef.content.event.subscribe((result: any) => {
       this.projectForm.controls['managerName'].setValue(result.userName);
       this.managerId = result.userId;
     });
@@ -191,7 +193,8 @@ export class AddProjectComponent implements OnInit {
       userId: this.managerId,
       projectId: 0,
       user: null,
-      tasks: null
+      tasks: null,
+      taskId:null
     };
   }
 

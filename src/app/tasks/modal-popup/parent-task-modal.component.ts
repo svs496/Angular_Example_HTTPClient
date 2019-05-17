@@ -24,7 +24,6 @@ export class ParentTaskModalComponent implements OnInit {
     this.applyFilters();
   }
 
-
   constructor(private taskService: TaskService, private bsModalRef: BsModalRef) { }
 
   ngOnInit() {
