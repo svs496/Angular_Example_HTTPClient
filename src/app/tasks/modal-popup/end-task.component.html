@@ -1,3 +1,22 @@
-<p>
-  end-task works!
-</p>
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="add-modal-label">Complete Task</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()"><span
+          aria-hidden="true">&times;</span></button>
+      
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="col-form-label">Completed Tasks cannot be edited! Are you sure you want to mark below task as Complete?</label>
+        <div style="margin-top:1%; text-align: center">
+          <h4 style="color:blue;">{{taskName}}</h4>
+        </div>
+      </div>
+      <div class="form-group">
+      
+        <div class="col-sm-10">
+          <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal" (click)="onClose()">Close</button>
+          <button type="submit" class="btn btn-primary btn-sm" (click)="endTask()" style="margin:1%;">End Task</button>
+        </div>
+      </div>
+    </div>

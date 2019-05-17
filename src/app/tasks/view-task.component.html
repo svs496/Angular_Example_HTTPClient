@@ -2,7 +2,8 @@
     <div class="row" style="margin-top:1%">
 
         <div class="col-md-4">
-            <input type="text" class="form-control form-control-sm" [(ngModel)]="projectName" name="projectName"
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="projectName"
+             name="projectName" [disabled]="true"
                 id="projectName" placeholder="Search Project..">
         </div>
         <div>
@@ -26,7 +27,7 @@
 
 <div *ngIf="taskList && taskList.length >0" style="margin-top:1%; width: 60%">
         <hr />
-    <div *ngFor = "let task of taskList" [ngClass]="{'alert-success': task.status == 2}">
+    <div *ngFor = "let task of taskList" [ngClass]="{'alert-warning': task.status == 2}">
         <div class="row">
             <div class="col-sm-2" style="font-weight: bold; font-size: medium;">Task</div>
             <div class="col-sm-2" style="font-weight: bold; font-size: medium;">Parent</div>
@@ -46,9 +47,9 @@
                     (click)="editTask(task.taskId)">Edit</button>
             </div>
             <div class="col"><button type="button" class="btn btn-primary btn-block btn-sm" [disabled]="task.status == 2"
-                    (click)="endTask(task.taskId)">End task</button></div>
+                    (click)="endTask(task)">End task</button></div>
             <div class="col"><button type="button" class="btn btn-danger btn-block btn-sm"
-                    (click)="deleteTask(task.taskId) ">Delete</button></div>
+                    (click)="deleteTask(task.taskId,task.taskName) ">Delete</button></div>
         </div>
 
         <hr />

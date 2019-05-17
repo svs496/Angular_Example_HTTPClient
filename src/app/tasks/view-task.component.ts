@@ -3,6 +3,9 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { ProjectListModalComponent } from '../project/modal-popup/project-list-modal.component';
 import { ITask } from '../model/task.model';
 import { TaskService } from '../shared/task.service';
+import { EditTaskComponent } from './modal-popup/edit-task.component';
+import { EndTaskComponent } from './modal-popup/end-task.component';
+import { DeleteTaskComponent } from './modal-popup/delete-task.component';
 
 @Component({
   selector: 'app-view-task',
@@ -35,11 +38,45 @@ export class ViewTaskComponent implements OnInit {
       this.projectName = result.projectName;
       this.projectId = result.projectId;
 
-      this.taskService.getTasksByProjectId(this.projectId)
-        .subscribe(response => {
-          this.originalTasks = response;
-          this.taskList = response;
-        });
+      this.getProjectTasksById();
+    });
+  }
+
+  private getProjectTasksById() {
+    this.taskService.getTasksByProjectId(this.projectId)
+      .subscribe(response => {
+        this.originalTasks = response;
+        this.taskList = response;
+      });
+  }
+
+  editTask(taskId: number) {
+
+    this.taskService.settempTaskId(taskId);
+    this.bsModalRef = this.bsModalService.show(EditTaskComponent, this.config);
+    this.taskService.settempTaskId(-999);
+    this.bsModalRef.content.event.subscribe(result => {
+      this.getProjectTasksById();
+    });
+  }
+
+  endTask(task :ITask) {
+    this.bsModalRef = this.bsModalService.show(EndTaskComponent, this.config);
+    this.bsModalRef.content.task= task;
+    this.bsModalRef.content.taskName= task.taskName;
+
+    this.bsModalRef.content.event.subscribe(result => {
+      this.getProjectTasksById();
+    });
+  }
+
+  deleteTask(taskId: number, taskName:string) {
+    this.bsModalRef = this.bsModalService.show(DeleteTaskComponent, this.config);
+    this.bsModalRef.content.taskName= taskName;
+    this.bsModalRef.content.taskId= taskId;
+
+    this.bsModalRef.content.event.subscribe(result => {
+      this.getProjectTasksById();
     });
   }
 

@@ -80,15 +80,14 @@ export class TaskService {
     );
   }
 
+
   deleteTask(id: number) : Observable<any> {
     return this.http.delete<any>(this.envUrl.urlAddress + 'api/task/delete/' + id, TaskService.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  endTask(id: number) {
-    
-  }
+ 
 
   getParentTasks(): Observable<ITask[]> {
     return this.http.get<ITask[]>(this.envUrl.urlAddress + 'api/task/GetParentTasks/')
