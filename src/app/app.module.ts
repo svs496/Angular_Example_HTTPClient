@@ -11,9 +11,6 @@ import { TaskListComponent } from './tasks/task-list.component';
 import { TaskService } from './shared/task.service';
 import { TaskThumbnailComponent } from './tasks/task-thumbnail.component';
 import { CreateTaskComponent } from './tasks/create-task.component';
-import { DeleteTaskComponent } from './tasks/delete-task.component';
-import { EditTaskComponent } from './tasks/edit-task.component';
-import { EndTaskComponent } from './tasks/end-task.component';
 import { SearchTaskComponent } from './tasks/search-task.component';
 import { Toastr, TOASTR_TOKEN } from './common/toastr.service';
 import { JQ_TOKEN } from './common/jQuery.service';
@@ -25,7 +22,13 @@ import { UserService } from './shared/user.service';
 import { ProjectService } from './shared/project.service';
 import { ViewUserComponent } from './user/view-user.component';
 import { ViewProjectComponent } from './project/view-project.component';
-import { ViewUserModalComponent } from './user/view-user-modal.component';
+import { UserListModalComponent } from './user/modal-popup/user-list-modal.component';
+import { DeleteTaskComponent } from './tasks/modal-popup/delete-task.component';
+import { EditTaskComponent } from './tasks/modal-popup/edit-task.component';
+import { EndTaskComponent } from './tasks/modal-popup/end-task.component';
+import { ParentTaskModalComponent } from './tasks/modal-popup/parent-task-modal.component';
+import { ProjectListModalComponent } from './project/modal-popup/project-list-modal.component';
+
 
 let toastr: Toastr = window['toastr'];
 let jQuery = window['$'];
@@ -45,7 +48,9 @@ let jQuery = window['$'];
     AddProjectComponent,
     ViewUserComponent,
     ViewProjectComponent,
-    ViewUserModalComponent
+    UserListModalComponent,
+    ParentTaskModalComponent,
+    ProjectListModalComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +71,13 @@ let jQuery = window['$'];
     ProjectService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [EditTaskComponent, DeleteTaskComponent, EndTaskComponent,ViewUserModalComponent ]
+  entryComponents: [
+    EditTaskComponent, 
+    DeleteTaskComponent, 
+    EndTaskComponent,
+    UserListModalComponent,
+    ParentTaskModalComponent,
+    ProjectListModalComponent
+  ]
 })
 export class AppModule { }

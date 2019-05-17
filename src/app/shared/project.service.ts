@@ -33,7 +33,7 @@ export class ProjectService {
       );
   }
 
-  getUsers(): Observable<IProject[]> {
+  getProjects(): Observable<IProject[]> {
     return this.http.get<IProject[]>(this.envUrl.urlAddress + 'api/project')
       .pipe(
         map(res => {

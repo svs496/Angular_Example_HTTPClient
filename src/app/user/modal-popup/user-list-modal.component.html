@@ -7,7 +7,7 @@
 
 </div>
 <div class="modal-body">
-  <form id="filterUsers" autocomplete="off" #filterSearchForm="ngForm" novalidate>
+  <form id="frmfilterUsers" autocomplete="off" #filterSearchUserForm="ngForm" novalidate>
     <div class="form-group row">
       <div class="col-form-label">
         <label for="filterUser" style="margin-bottom:5px;"
@@ -20,9 +20,9 @@
       </div>
     </div>
   </form>
-
+<div *ngIf = "userList && userList.length">
   <div class="table-responsive-sm" style="margin-top:10px;">
-    <table class="table table-sm" *ngIf="filterUsers && filterUsers.length">
+    <table class="table table-sm" *ngIf="userList && userList.length">
       <thead class="thead-light ">
         <tr>
           <th>Firstname</th>
@@ -31,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of filterUsers">
+        <tr *ngFor="let user of userList">
           <td>{{user.firstName | uppercase}}</td>
           <td>{{user.lastName | uppercase}}</td>
           <td>{{user.employeeID | uppercase}}</td>
@@ -43,6 +43,14 @@
       </tbody>
     </table>
   </div>
+</div>
+<div *ngIf="userList.length == 0">
+    <div class="row" style="padding-top:2%">
+    <div class = "col-md-3 text-center">
+        <label style="font-weight: bold; font-size: medium; font-style: italic;color: crimson">No Users Found</label>
+    </div>
+  </div>
+</div>
 
   <div class="form-group">
     <label class="col-sm-2 control-label"></label>

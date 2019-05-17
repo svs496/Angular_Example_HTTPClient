@@ -4,7 +4,7 @@ import { IProject } from '../model/project.model';
 import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 import { ProjectService } from '../shared/project.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { ViewUserModalComponent } from '../user/view-user-modal.component';
+import { UserListModalComponent } from '../user/modal-popup/user-list-modal.component';
 import { UserService } from '../shared/user.service';
 
 @Component({
@@ -89,7 +89,7 @@ export class AddProjectComponent implements OnInit {
   }
 
   getAllProjects() {
-    this.projectService.getUsers()
+    this.projectService.getProjects()
       .subscribe(response => {
         this.allProjects = [];
         this.allProjects = response;
@@ -97,12 +97,12 @@ export class AddProjectComponent implements OnInit {
   }
 
 
-  searchProjectManager() {
-    this.bsModalRef = this.bsModalService.show(ViewUserModalComponent, this.config);
+  selectProjectManager() {
+    this.bsModalRef = this.bsModalService.show(UserListModalComponent, this.config);
     this.bsModalRef.content.event.subscribe((result: any) => {
 
-      this.projectForm.controls['managerName'].setValue(result.managerName);
-      this.managerId = result.managerId;
+      this.projectForm.controls['managerName'].setValue(result.userName);
+      this.managerId = result.userId;
     });
   }
 

@@ -1,19 +1,18 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap';
-import { IUser } from '../model/user.model';
-import { UserService } from '../shared/user.service';
+import { IUser } from '../../model/user.model';
+import { UserService } from '../../shared/user.service';
 
 @Component({
   selector: 'app-view-user-modal',
-  templateUrl: './view-user-modal.component.html',
-  styleUrls: ['./view-user-modal.component.css']
+  templateUrl: './user-list-modal.component.html'
 })
-export class ViewUserModalComponent implements OnInit {
+export class UserListModalComponent implements OnInit {
 
-  users: IUser[] = [];
-  filterUsers: IUser[] = [];
+  originalUserList: IUser[] = [];
+  userList: IUser[] = [];
   _customFilter: string;
-  
+
   event: EventEmitter<any> = new EventEmitter();
 
   get filterUser(): string {
@@ -25,8 +24,8 @@ export class ViewUserModalComponent implements OnInit {
   }
 
   applyFilters() {
-    this.filterUsers = [];
-    this.filterUsers = this.users.filter(usr =>
+    this.userList = [];
+    this.userList = this.originalUserList.filter(usr =>
       (usr.firstName.toLowerCase().indexOf(this._customFilter) !== -1)
       || (usr.lastName.toLowerCase().indexOf(this._customFilter) !== -1)
     );
@@ -37,8 +36,8 @@ export class ViewUserModalComponent implements OnInit {
   ngOnInit() {
     this.userService.getUsers()
       .subscribe(response => {
-        this.users = response;
-        this.filterUsers = response;
+        this.originalUserList = response;
+        this.userList = response;
       }, (err) => { console.log('error Message from component' + err); });
 
   }
@@ -47,11 +46,11 @@ export class ViewUserModalComponent implements OnInit {
     this.bsModalRef.hide();
   }
 
-  selectUser(userId: number,firstName :string, lastName :string) {
+  selectUser(userId: number, firstName: string, lastName: string) {
     var managerDetail =
     {
-      'managerName': firstName + ' ' + lastName,
-      'managerId': userId
+      'userName': firstName + ' ' + lastName,
+      'userId': userId
     };
     this.event.emit(managerDetail);
     this.bsModalRef.hide();

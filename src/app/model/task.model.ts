@@ -7,5 +7,6 @@ export interface ITask
     endDate:Date
     priority:number
     status:number
-    parentTaskName : string
+    projectId: number
+    userId:number
 }
