@@ -99,8 +99,8 @@ export class AddProjectComponent implements OnInit {
 
   selectProjectManager() {
     this.bsModalRef = this.bsModalService.show(UserListModalComponent, this.config);
-    this.bsModalRef.content.modalHeader= "Manager";
-    this.bsModalRef.content.notFoundMessage= "No Manager Record Found.";
+    this.bsModalRef.content.modalHeader = "Manager";
+    this.bsModalRef.content.notFoundMessage = "No Manager Record Found.";
 
     this.bsModalRef.content.event.subscribe((result: any) => {
       this.projectForm.controls['managerName'].setValue(result.userName);
@@ -141,9 +141,10 @@ export class AddProjectComponent implements OnInit {
   changeToEditMode($event: number) {
     this.editProjectId = $event;
     this.addMode = false;
-    this.getProjectById();
+    this.patchEditForm();
   }
-  getProjectById() {
+
+  patchEditForm() {
     this.projectService.getProjectById(this.editProjectId)
       .subscribe(response => {
         this.projectForm.patchValue({
@@ -194,7 +195,7 @@ export class AddProjectComponent implements OnInit {
       projectId: 0,
       user: null,
       tasks: null,
-      taskId:null
+      taskId: null
     };
   }
 

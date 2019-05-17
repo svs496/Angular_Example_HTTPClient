@@ -1,13 +1,15 @@
 export interface ITask
 {
     taskId:number
-    parentTaskId:number
+    parentTaskId?:number
     taskName:string
-    parentTaskName:string
+    parentTaskName?:string
     startDate:Date
     endDate:Date
     priority:number
     status:number
     projectId: number
-    userId:number
+    userId:number,
+    projectName?:string
+    userName?:string
 }

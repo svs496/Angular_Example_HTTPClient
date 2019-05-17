@@ -1,6 +1,6 @@
 <div class="card bg-light mb-3" style="margin-top:10px;">
   <div class="card-header">
-    Create Task
+    {{title}}
   </div>
   <div class="card-body">
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" autocomplete="off">
@@ -120,8 +120,7 @@
 
       <div class="form-group row text-center">
         <div class="col-8">
-          <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid" style="margin-right: 1%">Add
-            Task</button>
+          <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid" style="margin-right: 1%">{{buttonModeText}}</button>
           <button type="button" class="btn btn-info" (click)="cancel()">Cancel</button>
         </div>
 

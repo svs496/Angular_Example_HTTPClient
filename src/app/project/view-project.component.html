@@ -23,7 +23,7 @@
   <ul class="list-group" style="width: 50%;margin-top:0.5%">
     <li class="list-group-item" *ngFor="let project of visibleProjects">
       <div class="row">
-        <div class="col">
+        <div class="col-md-6">
           <label style="font-weight: bold; font-size: medium;padding-right: 2% ">Project:</label>
           <label style="font-weight: bold; font-size: large; color:red">{{project?.projectName}}</label>
         </div>
@@ -31,7 +31,7 @@
           <label style="font-weight: bold; font-size: medium;margin-right: 2%">Priority:</label>
           <label style="font-weight: bold; font-size: medium; color:red;">{{project?.priority}}</label>
         </div>
-        <div class="col">
+        <div class="col-md-4">
           <label style="font-weight: bold; font-size: medium;margin-right: 2%">Manager:</label>
           <label style="font-weight: bold; font-size: medium; color:red;">{{project?.user?.firstName}}
             {{project?.user?.lastName}}</label>

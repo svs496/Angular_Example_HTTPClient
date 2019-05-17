@@ -6,6 +6,7 @@ import { TaskService } from '../shared/task.service';
 import { EditTaskComponent } from './modal-popup/edit-task.component';
 import { EndTaskComponent } from './modal-popup/end-task.component';
 import { DeleteTaskComponent } from './modal-popup/delete-task.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-task',
@@ -20,7 +21,7 @@ export class ViewTaskComponent implements OnInit {
   taskList: ITask[] = [];
 
 
-  constructor(private bsModalService: BsModalService, private taskService: TaskService) { }
+  constructor(private bsModalService: BsModalService, private taskService: TaskService, private router :Router) { }
 
   bsModalRef: BsModalRef
   config = {
@@ -51,13 +52,7 @@ export class ViewTaskComponent implements OnInit {
   }
 
   editTask(taskId: number) {
-
-    this.taskService.settempTaskId(taskId);
-    this.bsModalRef = this.bsModalService.show(EditTaskComponent, this.config);
-    this.taskService.settempTaskId(-999);
-    this.bsModalRef.content.event.subscribe(result => {
-      this.getProjectTasksById();
-    });
+    this.router.navigate(['task/edit', taskId]);
   }
 
   endTask(task :ITask) {

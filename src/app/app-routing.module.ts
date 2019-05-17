@@ -8,7 +8,7 @@ import { ViewTaskComponent } from './tasks/view-task.component';
 
 const routes: Routes = [
   { path:'tasks/view',component:ViewTaskComponent  },
-  { path:'task/new',component:CreateTaskComponent },
+  { path:'task/edit/:id',component:CreateTaskComponent },
   { path:'user/add',component:AddUserComponent },
   { path:'project/add',component:AddProjectComponent }
 ];

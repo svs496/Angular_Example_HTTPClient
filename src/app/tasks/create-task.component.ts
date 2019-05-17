@@ -7,6 +7,7 @@ import { TaskService } from '../shared/task.service';
 import { UserListModalComponent } from '../user/modal-popup/user-list-modal.component';
 import { ParentTaskModalComponent } from './modal-popup/parent-task-modal.component';
 import { ProjectListModalComponent } from '../project/modal-popup/project-list-modal.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-task',
@@ -20,7 +21,9 @@ export class CreateTaskComponent implements OnInit {
   parentTaskId: number;
   projectId: number;
   isParentTask: boolean = false;
-
+  editTaskId: number;
+  title: string;
+  buttonModeText:string;
 
   bsModalRef: BsModalRef
   config = {
@@ -30,8 +33,10 @@ export class CreateTaskComponent implements OnInit {
   };
 
   constructor(
-    private fb: FormBuilder, private bsModalService: BsModalService, private userService: UserService,
-    @Inject(TOASTR_TOKEN) private toastr: Toastr, private taskService: TaskService) {
+    private fb: FormBuilder, private bsModalService: BsModalService,
+    private route: ActivatedRoute,
+    @Inject(TOASTR_TOKEN) private toastr: Toastr,
+    private taskService: TaskService) {
 
   }
 
@@ -50,6 +55,9 @@ export class CreateTaskComponent implements OnInit {
     'endDate': {
       'required': 'End Date is required'
     },
+    'projectName': {
+      'required': 'Project Name is required'
+    },
     'dateGroup': {
       'dateMismatch': 'Task End Date cannot be before Task Start Date'
     }
@@ -60,10 +68,12 @@ export class CreateTaskComponent implements OnInit {
     "priority": '',
     "startDate": '',
     "endDate": '',
-    "dateGroup": ''
+    "dateGroup": '',
+    "projectName": ''
   };
 
   ngOnInit() {
+
     this.taskForm = this.fb.group({
       taskName: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
       parentTask: '',
@@ -72,10 +82,12 @@ export class CreateTaskComponent implements OnInit {
       projectName: '',
       dateGroup: this.fb.group(
         {
-          startDate: [new Date(Date.now()), Validators.required],
+          startDate: ['', Validators.required],
           endDate: ['', Validators.required]
         }, { validator: compareDate }),
     });
+
+    // this.taskForm.get('dateGroup').get('startDate').setValue(response.startDate);
     this.taskForm.controls['projectName'].disable();
     this.taskForm.controls['parentTask'].disable();
     this.taskForm.controls['userName'].disable();
@@ -83,6 +95,52 @@ export class CreateTaskComponent implements OnInit {
     this.taskForm.valueChanges.subscribe((data) => {
       this.logValidationErrors(this.taskForm);
     });
+
+    this.route.paramMap.subscribe(parameterMap => {
+      const id = +parameterMap.get('id');
+      this.editTaskId = id;
+      this.changetoEditMode(id);
+    });
+
+
+
+  } //ng onInit
+
+
+  changetoEditMode(id: number) {
+    if (id != 0) {
+      this.title = "Edit Task";
+      this.buttonModeText = "Edit Task";
+      this.taskService.getTaskById(id)
+        .subscribe(response => {
+          console.log(response);
+          this.taskForm.patchValue({
+            taskName: response.taskName,
+            priority: response.priority,
+            parentTask : response.parentTaskName,
+            userName:response.userName,
+            projectName :response.projectName,
+            dateGroup:
+            {
+             // startDate: response.startDate,
+              endDate: response.endDate
+            }
+          });
+
+          this.taskForm.get('dateGroup').get('startDate').setValue(response.startDate);
+        }
+        
+        );
+
+      
+
+    }
+    else {
+      this.title = "Create Task";
+      this.buttonModeText = "Add Task";
+      this.ResetCreateTaskForm();
+    }
+
   }
 
   cancel() {
@@ -96,7 +154,7 @@ export class CreateTaskComponent implements OnInit {
     this.taskForm.get('priority').enable();
     this.taskForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
     this.isParentTask = false;
-    
+
     this.taskForm.reset({
       'taskName': '',
       'parentTask': '',
