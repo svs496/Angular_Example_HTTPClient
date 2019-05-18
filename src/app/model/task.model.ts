@@ -12,4 +12,6 @@ export interface ITask
     userId:number,
     projectName?:string
     userName?:string
+    isParentTask?:boolean
+    createTime ? : Date
 }

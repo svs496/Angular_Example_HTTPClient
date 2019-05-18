@@ -135,9 +135,9 @@ export class AddUserComponent implements OnInit {
     if (this.userForm.valid) {
       var user = {
         userId: this.editUserId,
-        firstName: this.userForm.value.firstName,
-        lastName: this.userForm.value.lastName,
-        employeeID: this.userForm.value.employeeID
+        firstName: this.userForm.value.firstName.toUpperCase(),
+        lastName: this.userForm.value.lastName.toUpperCase(),
+        employeeID: this.userForm.value.employeeID.toUpperCase()
       };
 
       this.userService.editUser(this.editUserId, user)
@@ -168,9 +168,9 @@ export class AddUserComponent implements OnInit {
   onSubmit(): void {
     if (this.userForm.valid) {
       var user = {
-        firstName: this.userForm.value.firstName,
-        lastName: this.userForm.value.lastName,
-        employeeID: this.userForm.value.employeeID
+        firstName: this.userForm.value.firstName.toUpperCase(),
+        lastName: this.userForm.value.lastName.toUpperCase(),
+        employeeID: this.userForm.value.employeeID.toUpperCase()
       };
 
       this.userService.addUser(user)

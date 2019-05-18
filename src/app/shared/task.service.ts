@@ -73,7 +73,7 @@ export class TaskService {
     );
   }
 
-  editTask(id:number,task: ITask): Observable<any> {
+  editTask(id:number,task: any): Observable<any> {
     return this.http.put(this.envUrl.urlAddress + 'api/task/put/' + id, JSON.stringify(task), TaskService.httpOptions).pipe(
       tap(_ => console.log(`updated task id=${id}`)),
       catchError(this.handleError)

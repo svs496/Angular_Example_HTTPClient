@@ -7,11 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { TaskListComponent } from './tasks/task-list.component';
 import { TaskService } from './shared/task.service';
-import { TaskThumbnailComponent } from './tasks/task-thumbnail.component';
 import { CreateTaskComponent } from './tasks/create-task.component';
-import { SearchTaskComponent } from './tasks/search-task.component';
 import { Toastr, TOASTR_TOKEN } from './common/toastr.service';
 import { JQ_TOKEN } from './common/jQuery.service';
 import { EnvironmentUrlService } from './shared/environment-url.service';
@@ -37,13 +34,10 @@ let jQuery = window['$'];
 @NgModule({
   declarations: [
     AppComponent,
-    TaskListComponent,
-    TaskThumbnailComponent,
     CreateTaskComponent,
     DeleteTaskComponent,
     EditTaskComponent,
     EndTaskComponent,
-    SearchTaskComponent,
     NavBarComponent,
     AddUserComponent,
     AddProjectComponent,

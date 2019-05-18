@@ -17,7 +17,9 @@ export class ViewProjectComponent implements OnInit, OnChanges {
   visibleProjects: IProject[] = [];
   @Output() editMessageEvent = new EventEmitter<number>();
   _customFilter: string;
- 
+  completedTasks: number = 0;
+  suspend: boolean = false;
+
 
   constructor(@Inject(TOASTR_TOKEN) private toastr: Toastr) { }
 
@@ -45,7 +47,7 @@ export class ViewProjectComponent implements OnInit, OnChanges {
         );
       }
       else
-      this.visibleProjects = this.projects;
+        this.visibleProjects = this.projects;
 
       if (this.sortBy === 'startDate') {
         this.visibleProjects.sort(sortByStartDate);
@@ -63,6 +65,10 @@ export class ViewProjectComponent implements OnInit, OnChanges {
     }
   }
 
+  suspendProject() {
+    this.suspend = true;
+  }
+
   setSortValue(sortString: string) {
     this.sortBy = sortString;
     this.SortAndFilterProjects();
@@ -72,7 +78,7 @@ export class ViewProjectComponent implements OnInit, OnChanges {
     this.editMessageEvent.emit(id);
   }
   ngOnInit() {
-    //this.visibleProjects = this.projects;
+
   }
 
 }

@@ -7,7 +7,8 @@ import { TaskService } from '../shared/task.service';
 import { UserListModalComponent } from '../user/modal-popup/user-list-modal.component';
 import { ParentTaskModalComponent } from './modal-popup/parent-task-modal.component';
 import { ProjectListModalComponent } from '../project/modal-popup/project-list-modal.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { getLocaleDateTimeFormat } from '@angular/common';
 
 @Component({
   selector: 'app-create-task',
@@ -21,9 +22,13 @@ export class CreateTaskComponent implements OnInit {
   parentTaskId: number;
   projectId: number;
   isParentTask: boolean = false;
-  editTaskId: number;
+  editTaskId: number = 0;
   title: string;
-  buttonModeText:string;
+  buttonModeText: string;
+  editTaskStartDate: Date;
+  editTaskEndDate: Date
+  editTaskPriority: number;
+  editTaskCreateDate : Date
 
   bsModalRef: BsModalRef
   config = {
@@ -35,6 +40,7 @@ export class CreateTaskComponent implements OnInit {
   constructor(
     private fb: FormBuilder, private bsModalService: BsModalService,
     private route: ActivatedRoute,
+    private router: Router,
     @Inject(TOASTR_TOKEN) private toastr: Toastr,
     private taskService: TaskService) {
 
@@ -113,27 +119,33 @@ export class CreateTaskComponent implements OnInit {
       this.buttonModeText = "Edit Task";
       this.taskService.getTaskById(id)
         .subscribe(response => {
-          console.log(response);
           this.taskForm.patchValue({
             taskName: response.taskName,
             priority: response.priority,
-            parentTask : response.parentTaskName,
-            userName:response.userName,
-            projectName :response.projectName,
+            parentTask: response.parentTaskName,
+            userName: response.userName,
+            projectName: response.projectName,
             dateGroup:
             {
-             // startDate: response.startDate,
+              // startDate: response.startDate,
               endDate: response.endDate
             }
           });
 
           this.taskForm.get('dateGroup').get('startDate').setValue(response.startDate);
-        }
-        
-        );
+          this.projectId = response.projectId;
+          this.userId = response.userId;
+          this.parentTaskId = response.parentTaskId;
+          this.editTaskEndDate = response.endDate;
+          this.editTaskStartDate = response.startDate;
+          this.editTaskPriority = response.priority;
+          this.editTaskCreateDate = response.createTime;
 
-      
+          if (response.isParentTask) {
+            this.disablePTControls();
+          }
 
+        });
     }
     else {
       this.title = "Create Task";
@@ -152,7 +164,7 @@ export class CreateTaskComponent implements OnInit {
     this.taskForm.get('dateGroup').get('startDate').enable();
     this.taskForm.get('dateGroup').get('endDate').enable();
     this.taskForm.get('priority').enable();
-    this.taskForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
+    //this.taskForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
     this.isParentTask = false;
 
     this.taskForm.reset({
@@ -207,45 +219,98 @@ export class CreateTaskComponent implements OnInit {
   onSubmit(): void {
     if (this.taskForm.valid) {
 
-      var tasktoAdd = {
-        parentTaskId: this.isParentTask ? null : this.parentTaskId,
-        taskName: this.taskForm.value.taskName,
-        priority: this.isParentTask ? 0 : this.taskForm.value.priority,
-        startDate: this.isParentTask ? null : this.taskForm.value.dateGroup.startDate,
-        endDate: this.isParentTask ? null : this.taskForm.value.dateGroup.endDate,
-        status: 1,
-        projectId: this.projectId,
-        userId: this.userId
-      };
+      var tasktoAdd = this.mapToModal();
 
-      this.taskService.addTask(tasktoAdd).subscribe(res => {
-        this.toastr.success('A new Task is added!');
-        this.ResetCreateTaskForm();
-      },
-        (error => {
-          this.toastr.error("Some thing went wrong. Contact Administrator.")
-          console.error(error);
-        })
-      )
+      if (this.editTaskId === 0) {
+        this.CallAddTaskAPI(tasktoAdd);
+      }
+      else {
+        tasktoAdd.taskId = this.editTaskId;
+        tasktoAdd.createTime = this.editTaskCreateDate
+        this.CallEditTaskAPI(tasktoAdd);
+      }
+
     }
   }
 
-  disableParentTaskControls(check: any) {
+  private CallAddTaskAPI(tasktoAdd: { parentTaskId: number; taskName: any; priority: any; startDate: any; endDate: any; status: number; projectId: number; userId: number; }) {
+    this.taskService.addTask(tasktoAdd).subscribe(res => {
+      this.toastr.success('A new Task is added!');
+      this.ResetCreateTaskForm();
+    }, (error => {
+      this.toastr.error("Some thing went wrong. Contact Administrator.");
+      console.error(error);
+    }));
+  }
+
+
+  private CallEditTaskAPI(tasktoAdd: { parentTaskId: number; taskName: any; priority: any; startDate: any; endDate: any; status: number; projectId: number; userId: number; }) {
+    this.taskService.editTask(this.editTaskId, tasktoAdd).subscribe(res => {
+      this.toastr.success('Task edited succssfully!');
+      this.ResetCreateTaskForm();
+      this.router.navigate(['tasks/view']);
+
+    }, (error => {
+      this.toastr.error("Some thing went wrong. Contact Administrator.");
+      console.error(error);
+    }));
+  }
+
+
+
+  private mapToModal() {
+    return {
+      parentTaskId: this.isParentTask ? null : this.parentTaskId,
+      taskName: this.taskForm.value.taskName.toUpperCase(),
+      priority: this.isParentTask ? 0 : this.taskForm.value.priority,
+      startDate: this.isParentTask ? null : this.taskForm.value.dateGroup.startDate,
+      endDate: this.isParentTask ? null : this.taskForm.value.dateGroup.endDate,
+      status: 1,
+      projectId: this.projectId,
+      userId: this.userId,
+      taskId: 0,
+      isParentTask: this.isParentTask,
+      createTime :new Date(Date.now())
+    };
+  }
+
+  enableorDisableParentTaskControls(check: any) {
     if (check.target.checked) {
-      this.taskForm.get('dateGroup').get('startDate').setValue('');
-      this.taskForm.get('dateGroup').get('startDate').disable();
-      this.taskForm.get('dateGroup').get('endDate').disable();
-      this.taskForm.get('priority').disable();
-      this.isParentTask = true;
+      this.disablePTControls();
     }
     else {
-      this.taskForm.get('dateGroup').get('startDate').enable();
-      this.taskForm.get('dateGroup').get('endDate').enable();
-      this.taskForm.get('priority').enable();
-      this.taskForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
-      this.isParentTask = false;
+      this.enablePTControls();
+
     }
 
+  }
+
+  private enablePTControls() {
+    this.taskForm.get('dateGroup').get('startDate').enable();
+    this.taskForm.get('dateGroup').get('endDate').enable();
+    this.taskForm.get('priority').enable();
+    this.isParentTask = false;
+    if (this.editTaskId != 0) {
+      if (this.editTaskStartDate)
+        this.taskForm.get('dateGroup').get('startDate').setValue(this.editTaskStartDate);
+      if (this.editTaskEndDate)
+        this.taskForm.get('dateGroup').get('endDate').setValue(this.editTaskEndDate);
+      if (this.editTaskPriority > 0)
+        this.taskForm.get('priority').setValue(this.editTaskPriority);
+    }
+    else {
+      this.taskForm.get('dateGroup').get('startDate').setValue(new Date(Date.now()));
+    }
+  }
+
+  private disablePTControls() {
+    this.isParentTask = true;
+    this.taskForm.get('dateGroup').get('startDate').disable();
+    this.taskForm.get('dateGroup').get('endDate').disable();
+    this.taskForm.get('priority').disable();
+    this.taskForm.get('dateGroup').get('endDate').setValue('');
+    this.taskForm.get('dateGroup').get('startDate').setValue('');
+    this.taskForm.get('priority').setValue('0');
   }
 
   selectUser() {
@@ -270,6 +335,7 @@ export class CreateTaskComponent implements OnInit {
 
   selectProject() {
     this.bsModalRef = this.bsModalService.show(ProjectListModalComponent, this.config);
+
     this.bsModalRef.content.event.subscribe((result: any) => {
       this.taskForm.controls['projectName'].setValue(result.projectName);
       this.projectId = result.projectId;

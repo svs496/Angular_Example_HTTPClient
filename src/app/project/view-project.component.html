@@ -40,11 +40,11 @@
       <div class="row" style="margin-top:1%">
         <div class="col">
           <label class="fieldLabels">No of Tasks: </label>
-          <label class="fieldValues"></label>
+          <label class="fieldValues">{{project?.tasks?.length ==  null ? 0 : project?.tasks?.length }}</label>
         </div>
         <div class="col">
           <label class="fieldLabels">Completed: </label>
-          <label class="fieldValues"></label>
+          <label class="fieldValues">{{project?.completedTaskCount }}</label>
         </div>
         <div class="col-sm-2">
           <button type="button" class="btn btn-info btn-block btn-sm"
@@ -62,7 +62,7 @@
         </div>
         <div class="col-sm-2">
           <button type="button" class="btn btn-success btn-block btn-sm"
-            (click)="suspendProject(project.projectId)">Suspend</button>
+            (click)="suspendProject())">Suspend</button>
         </div>
       </div>
     </li>

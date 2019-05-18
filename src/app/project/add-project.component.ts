@@ -187,7 +187,7 @@ export class AddProjectComponent implements OnInit {
   private maptoModal() {
     this.project = null;
     this.project = {
-      projectName: this.projectForm.value.projectName,
+      projectName: this.projectForm.value.projectName.toUpperCase(),
       priority: this.projectForm.value.priority,
       startDate: this.projectForm.value.dateGroup.startDate,
       endDate: this.projectForm.value.dateGroup.endDate,

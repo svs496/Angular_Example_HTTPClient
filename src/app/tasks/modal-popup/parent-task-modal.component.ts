@@ -14,6 +14,7 @@ export class ParentTaskModalComponent implements OnInit {
   parentTaskList: ITask[] = [];
   _customFilter: string;
 
+
   event: EventEmitter<any> = new EventEmitter();
 
   get filterParentTask(): string {
@@ -27,6 +28,8 @@ export class ParentTaskModalComponent implements OnInit {
   constructor(private taskService: TaskService, private bsModalRef: BsModalRef) { }
 
   ngOnInit() {
+    
+
     this.getParentTasks();
   }
 
@@ -42,8 +45,8 @@ export class ParentTaskModalComponent implements OnInit {
   applyFilters() {
     this.parentTaskList = [];
     this.parentTaskList = this.originalParentTasks.filter(p =>
-        (p.taskName.toLowerCase().indexOf(this._customFilter) !== -1)
-      );
+      (p.taskName.toLowerCase().indexOf(this._customFilter) !== -1)
+    );
   }
 
   onClose() {

@@ -12,5 +12,6 @@ export interface IProject
     tasks: ITask[]
     user : IUser
     taskId :number
+    completedTaskCount ? : number
     
 }
