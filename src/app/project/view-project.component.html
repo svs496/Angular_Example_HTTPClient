@@ -22,7 +22,7 @@
 <div *ngIf="visibleProjects && visibleProjects.length">
   <ul class="list-group" style="width: 50%;margin-top:0.5%">
     <li class="list-group-item" *ngFor="let project of visibleProjects">
-      <div class="row">
+      <div class="row"  [ngClass]="{'alert-success': project?.isSuspended}">
         <div class="col-md-6">
           <label style="font-weight: bold; font-size: medium;padding-right: 2% ">Project:</label>
           <label style="font-weight: bold; font-size: large; color:red">{{project?.projectName}}</label>
@@ -47,7 +47,7 @@
           <label class="fieldValues">{{project?.completedTaskCount }}</label>
         </div>
         <div class="col-sm-2">
-          <button type="button" class="btn btn-info btn-block btn-sm"
+          <button type="button" class="btn btn-info btn-block btn-sm" [disabled] = "project?.isSuspended"
             (click)="editProject(project.projectId)">Update</button>
         </div>
       </div>
@@ -62,7 +62,7 @@
         </div>
         <div class="col-sm-2">
           <button type="button" class="btn btn-success btn-block btn-sm"
-            (click)="suspendProject())">Suspend</button>
+            (click)="suspendProject(project.projectId)">Suspend</button>
         </div>
       </div>
     </li>

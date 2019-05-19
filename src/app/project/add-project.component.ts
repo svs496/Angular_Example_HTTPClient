@@ -122,6 +122,10 @@ export class AddProjectComponent implements OnInit {
     this.addMode = true;
   }
 
+  reloadComponent(){
+    this.getAllProjects();
+  }
+
   cancel() {
     this.addMode = true;
     this.projectForm.reset({

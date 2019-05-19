@@ -70,7 +70,6 @@ export class AddUserComponent implements OnInit {
   getUserById() {
     this.userService.getUserById(this.editUserId)
       .subscribe(response => {
-        console.log(response);
         this.userForm.patchValue({
           userId: response.userId,
           firstName: response.firstName,

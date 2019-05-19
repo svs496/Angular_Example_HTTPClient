@@ -16,12 +16,14 @@ export class ViewProjectComponent implements OnInit, OnChanges {
   sortBy: string = 'startDate';
   visibleProjects: IProject[] = [];
   @Output() editMessageEvent = new EventEmitter<number>();
+  @Output() suspendMessageEvent = new EventEmitter<number>();
   _customFilter: string;
   completedTasks: number = 0;
-  suspend: boolean = false;
+  project: IProject
 
 
-  constructor(@Inject(TOASTR_TOKEN) private toastr: Toastr) { }
+
+  constructor(@Inject(TOASTR_TOKEN) private toastr: Toastr, private projectService: ProjectService) { }
 
   ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
     this.SortAndFilterProjects();
@@ -65,8 +67,27 @@ export class ViewProjectComponent implements OnInit, OnChanges {
     }
   }
 
-  suspendProject() {
-    this.suspend = true;
+  suspendProject(id: number) {
+    this.projectService.getProjectById(id)
+      .subscribe(response => {
+        this.project = response;
+        this.project.isSuspended = true;
+
+        this.projectService.editProject(id, this.project)
+          .subscribe(resp => {
+            this.toastr.success('Project Suspended!');
+            this.suspendMessageEvent.emit();
+          },
+            (error) => {
+              if (error.status == '409') {
+                this.toastr.error(error.error.customMessage);
+              }
+              else {
+                this.toastr.error("Operation Failed. Contact Admin!")
+              }
+
+            });
+      });
   }
 
   setSortValue(sortString: string) {

@@ -13,5 +13,6 @@ export interface IProject
     user : IUser
     taskId :number
     completedTaskCount ? : number
+    isSuspended ? : boolean
     
 }

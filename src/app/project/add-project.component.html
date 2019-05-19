@@ -106,5 +106,5 @@
 <div *ngIf="allProjects && allProjects.length">
    
     <app-view-project [projects]="allProjects" (editMessageEvent)="changeToEditMode($event)"
-        (deleteMessageEvent)="deleteComplete($event)"></app-view-project>
+        (deleteMessageEvent)="deleteComplete($event)" (suspendMessageEvent) = "reloadComponent()" ></app-view-project>
 </div>
