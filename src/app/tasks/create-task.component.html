@@ -95,7 +95,7 @@
         <div class="form-group row" [ngClass]="{'alert alert-danger': formErrors.endDate || formErrors.dateGroup}">
           <label for="endDate" class="col-sm-2 col-form-label col-form-label-sm">End Date:</label>
           <div class="col-md-4">
-            <input type="text" bsDatepicker [minDate]="minDate" [bsConfig]="{ showWeekNumbers:false}"
+            <input type="text" bsDatepicker  [bsConfig]="{ showWeekNumbers:false}"
               class="form-control form-control-sm" formControlName="endDate" id="endDate"
               value="{{taskForm.get('dateGroup').get('endDate').value | date: 'shortDate'}}"
               (blur)="logValidationErrors()">

@@ -28,7 +28,8 @@ export class CreateTaskComponent implements OnInit {
   editTaskStartDate: Date;
   editTaskEndDate: Date
   editTaskPriority: number;
-  editTaskCreateDate : Date
+  editTaskCreateDate: Date;
+
 
   bsModalRef: BsModalRef
   config = {
@@ -186,19 +187,7 @@ export class CreateTaskComponent implements OnInit {
       const abstractControl = group.get(key);
       this.formErrors[key] = '';
 
-      // if (key === 'startDate') {
-
-      //   if (abstractControl.value !== '') {
-      //     this.stDt = new Date(abstractControl.value).toLocaleDateString();
-
-      //   }
-      // }
-
-      // if (key === 'endDate') {
-      //   if (typeof this.stDt != 'undefined') {
-      //     this.minDate = new Date(this.stDt);
-      //   }
-      // }
+    
 
       if (abstractControl && !abstractControl.valid &&
         (abstractControl.touched || abstractControl.dirty || abstractControl.value !== '')) {
@@ -270,7 +259,7 @@ export class CreateTaskComponent implements OnInit {
       userId: this.userId,
       taskId: 0,
       isParentTask: this.isParentTask,
-      createTime :new Date(Date.now())
+      createTime: new Date(Date.now())
     };
   }
 

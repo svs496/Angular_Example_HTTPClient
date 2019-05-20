@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-md-3"
                         [ngClass]="{'alert alert-danger': formErrors.endDate || formErrors.dateGroup}">
-                        <input type="text" bsDatepicker [minDate]="minDate" [bsConfig]="{ showWeekNumbers:false}"
+                        <input type="text" bsDatepicker [bsConfig]="{ showWeekNumbers:false}"
                             class="form-control" formControlName="endDate" id="endDate"
                             value="{{projectForm.get('dateGroup').get('endDate').value | date: 'shortDate'}}"
                             (blur)="logValidationErrors()">

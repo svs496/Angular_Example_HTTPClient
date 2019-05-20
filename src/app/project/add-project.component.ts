@@ -21,6 +21,7 @@ export class AddProjectComponent implements OnInit {
   addMode: boolean
   editProjectId: number;
   managerId: number;
+ 
 
   bsModalRef: BsModalRef
   config = {
@@ -122,7 +123,7 @@ export class AddProjectComponent implements OnInit {
     this.addMode = true;
   }
 
-  reloadComponent(){
+  reloadComponent() {
     this.getAllProjects();
   }
 
@@ -237,6 +238,7 @@ export class AddProjectComponent implements OnInit {
       const abstractControl = group.get(key);
       this.formErrors[key] = '';
 
+     
 
       if (abstractControl && !abstractControl.valid &&
         (abstractControl.touched || abstractControl.dirty || abstractControl.value !== '')) {

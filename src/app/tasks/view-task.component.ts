@@ -18,9 +18,9 @@ export class ViewTaskComponent implements OnInit {
   projectName: string
   originalTasks: ITask[] = [];
   taskList: ITask[] = [];
+  sortBy: string = 'startDate'
 
-
-  constructor(private bsModalService: BsModalService, private taskService: TaskService, private router :Router) { }
+  constructor(private bsModalService: BsModalService, private taskService: TaskService, private router: Router) { }
 
   bsModalRef: BsModalRef
   config = {
@@ -32,6 +32,10 @@ export class ViewTaskComponent implements OnInit {
   ngOnInit() {
   }
 
+  setSortValue(sortString: string) {
+
+  }
+  
   selectProject() {
     this.bsModalRef = this.bsModalService.show(ProjectListModalComponent, this.config);
     this.bsModalRef.content.event.subscribe((result: any) => {
@@ -54,20 +58,20 @@ export class ViewTaskComponent implements OnInit {
     this.router.navigate(['task/edit', taskId]);
   }
 
-  endTask(task :ITask) {
+  endTask(task: ITask) {
     this.bsModalRef = this.bsModalService.show(EndTaskComponent, this.config);
-    this.bsModalRef.content.task= task;
-    this.bsModalRef.content.taskName= task.taskName;
+    this.bsModalRef.content.task = task;
+    this.bsModalRef.content.taskName = task.taskName;
 
     this.bsModalRef.content.event.subscribe(() => {
       this.getProjectTasksById();
     });
   }
 
-  deleteTask(taskId: number, taskName:string) {
+  deleteTask(taskId: number, taskName: string) {
     this.bsModalRef = this.bsModalService.show(DeleteTaskComponent, this.config);
-    this.bsModalRef.content.taskName= taskName;
-    this.bsModalRef.content.taskId= taskId;
+    this.bsModalRef.content.taskName = taskName;
+    this.bsModalRef.content.taskId = taskId;
 
     this.bsModalRef.content.event.subscribe(() => {
       this.getProjectTasksById();
