@@ -3,7 +3,6 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { ProjectListModalComponent } from '../project/modal-popup/project-list-modal.component';
 import { ITask } from '../model/task.model';
 import { TaskService } from '../shared/task.service';
-import { EditTaskComponent } from './modal-popup/edit-task.component';
 import { EndTaskComponent } from './modal-popup/end-task.component';
 import { DeleteTaskComponent } from './modal-popup/delete-task.component';
 import { Router } from '@angular/router';
@@ -60,7 +59,7 @@ export class ViewTaskComponent implements OnInit {
     this.bsModalRef.content.task= task;
     this.bsModalRef.content.taskName= task.taskName;
 
-    this.bsModalRef.content.event.subscribe(result => {
+    this.bsModalRef.content.event.subscribe(() => {
       this.getProjectTasksById();
     });
   }
@@ -70,7 +69,7 @@ export class ViewTaskComponent implements OnInit {
     this.bsModalRef.content.taskName= taskName;
     this.bsModalRef.content.taskId= taskId;
 
-    this.bsModalRef.content.event.subscribe(result => {
+    this.bsModalRef.content.event.subscribe(() => {
       this.getProjectTasksById();
     });
   }

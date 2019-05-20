@@ -21,7 +21,6 @@ import { ViewUserComponent } from './user/view-user.component';
 import { ViewProjectComponent } from './project/view-project.component';
 import { UserListModalComponent } from './user/modal-popup/user-list-modal.component';
 import { DeleteTaskComponent } from './tasks/modal-popup/delete-task.component';
-import { EditTaskComponent } from './tasks/modal-popup/edit-task.component';
 import { EndTaskComponent } from './tasks/modal-popup/end-task.component';
 import { ParentTaskModalComponent } from './tasks/modal-popup/parent-task-modal.component';
 import { ProjectListModalComponent } from './project/modal-popup/project-list-modal.component';
@@ -36,7 +35,6 @@ let jQuery = window['$'];
     AppComponent,
     CreateTaskComponent,
     DeleteTaskComponent,
-    EditTaskComponent,
     EndTaskComponent,
     NavBarComponent,
     AddUserComponent,
@@ -68,7 +66,6 @@ let jQuery = window['$'];
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    EditTaskComponent, 
     DeleteTaskComponent, 
     EndTaskComponent,
     UserListModalComponent,
